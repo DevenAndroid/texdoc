@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "871390372258",
+    "project_id": "texdoc-doctor",
+    "storage_bucket": "texdoc-doctor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:871390372258:android:a8b908e4da3ba82636d2fb",
+        "android_client_info": {
+          "package_name": "com.eoxysIt.texdoc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "871390372258-bpup58hmu31qhj9qbh0adobqhgdspv17.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.eoxysIt.texdoc",
+            "certificate_hash": "a6a68143aa190be49b46aaa454206c7123ff78c3"
+          }
+        },
+        {
+          "client_id": "871390372258-2bh1p75ofr6qb4tl691uirdmd2ib6a2m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwZZgg_W5OkVLwBz5u0JoBTBPmIdCRHM4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "871390372258-2bh1p75ofr6qb4tl691uirdmd2ib6a2m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
