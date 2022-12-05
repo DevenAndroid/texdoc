@@ -160,7 +160,10 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                         );
                       });
                     }),
-              )
+              ),
+
+
+
             ],
           ) :
           Center(
@@ -704,7 +707,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                             fontWeight: FontWeight.w500,
                             height: 2),
                       )),
-                  /* Container(
+                   Container(
                     height: 60,
                     padding: const EdgeInsets.only(left: 12.0),
                     decoration: BoxDecoration(
@@ -733,7 +736,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                         }).toList(),
                       ),
                     ),
-                  ),*/
+                  ),
                   const Align(
                       alignment: Alignment.centerLeft,
                       heightFactor: 1.5,

@@ -105,11 +105,10 @@ class ChatBubble extends StatelessWidget {
                       children: [
                         Spacer(),
                         Padding(
-                            padding: const EdgeInsets.all(1),
+                            padding: const EdgeInsets.only(left: 4,top: 4),
                             child: Text(
                               date_time.toString(),
-                              style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                  color: isCurrentUser ? Colors.black : Colors.black87),
+                              style: Theme.of(context).textTheme.bodyText1!.copyWith(color: isCurrentUser ? Colors.black : Colors.grey, fontSize: 12.0,),
                             )),
                       ],
                     )
@@ -203,11 +202,10 @@ class ChatBubble extends StatelessWidget {
                 children: [
 
                   Padding(
-                      padding: const EdgeInsets.all(1),
+                      padding: const EdgeInsets.only(left: 4,top: 4),
                       child: Text(
                         date_time.toString(),
-                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            color: isCurrentUser ? Colors.black : Colors.black87),
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(color: isCurrentUser ? Colors.black : Colors.grey, fontSize: 12.0,),
                       )),
                 ],
               )

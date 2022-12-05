@@ -1,15 +1,19 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:getwidget/components/dropdown/gf_multiselect.dart';
+import 'package:getwidget/types/gf_checkbox_type.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:texdoc/app_utils/loading_indicator.dart';
 import 'package:texdoc/controller/category_list_controller.dart';
 import 'package:texdoc/controller/get-user-profile_controller.dart';
 import 'package:texdoc/repository/update-doctor-register_repository.dart';
 import 'package:texdoc/resources/app_theme.dart';
+import 'package:texdoc/resources/new_helper.dart';
 import 'package:texdoc/resources/strings.dart';
 import 'package:texdoc/routers/my_router.dart';
 import 'package:texdoc/app_utils/utils.dart';
@@ -17,13 +21,19 @@ import 'package:texdoc/widgets/tok2DocButton.dart';
 import 'package:texdoc/widgets/tok2DocTextField.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
-import '../resources/new_helper.dart';
-import 'Doctor Screens/bottom_navbar_custom.dart';
-import 'dr_profile_screen.dart';
+import '../../app_utils/api_constant.dart';
+import '../../controller/doctor_Speciality_list_controller.dart';
+import '../../models/api_models/model_degree_&_concentration_response.dart';
+import '../../models/api_models/model_login_response.dart';
+import '../../models/api_models/model_speciality_list_response.dart';
+import '../../repository/speciality_update_repository.dart';
+import '../widgets/tok2DocButton2.dart';
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({Key? key}) : super(key: key);
@@ -33,30 +43,18 @@ class MyProfileScreen extends StatefulWidget {
 }
 
 class _MyProfileScreenState extends State<MyProfileScreen> {
+  List<String> _myActivities = [];
+  String? _myActivitiesResult;
+  final formKey = new GlobalKey<FormState>();
+
   // profileController
   UserProfileController controller = Get.put(UserProfileController());
   final CategoryListController _categoryListController =
       Get.put(CategoryListController());
 
-
   final _formKey = GlobalKey<FormState>();
 
-  // TextEditing Controllers
-
-
-
-  // String? documentName1 = "";
-  // File? documentPath1;
-  //
-  // String? documentName2 = "";
-  // String? documentPath2;
-  //
-  // String? documentName3 = "";
-  // String? documentPath3;
-  //
-  // String? documentName4 = "";
-  // String? documentPath4;
-
+  //SpecialityListController controllera = Get.put(SpecialityListController());
   Rx<File> document1 = File("").obs;
   Rx<File> document2 = File("").obs;
   Rx<File> document3 = File("").obs;
@@ -70,50 +68,257 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   String? experience = "";
   String? gender = "";
   String? dateOfBirth = "";
-  var degree;
-  var spe;
 
-  List<String> categoryList = [
-    'MBBS',
-    'BDS',
-    'BAMS',
-    'BHMS',
-    'BUMS',
-    'BYNS'
-  ]; // Option 2
+  // SpecialityListController _controllera = Get.put(SpecialityListController());
 
+  String specialistValue = "";
+  String degreeslistValue = "";
 
+  List<String> DegreeList = ['MBBS', 'BDS', 'BAMS', 'BHMS', 'BUMS', 'BYNS'];
+
+  UserProfileController _profileController = Get.put(UserProfileController());
+
+  var degree = "";
   var concentration;
   var institutionName;
   var degreeId;
   var ConcentrationId;
 
+  MedicalDegree? degreenew;
+  var splist = '';
 
-  getdegreeData() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
+  showSpecialistDialogue() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            insetPadding: EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: MediaQuery.of(context).size.height * .14),
+            child: Obx(() {
+              return _profileController.specialistLoaded.value
+                  ? Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "    Select Specialty",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 16),
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                icon: const Icon(Icons.clear))
+                          ],
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                              itemCount: _profileController
+                                  .specialistModel.value.data!.length,
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.all(16),
+                              physics: const BouncingScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return Obx(() {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 6),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                            child: Text(_profileController
+                                                .specialistModel
+                                                .value
+                                                .data![index]
+                                                .specialistname
+                                                .toString())),
+                                        Checkbox(
+                                            value: _profileController
+                                                .specialistModel
+                                                .value
+                                                .data![index]
+                                                .selected!
+                                                .value,
+                                            onChanged: (value) {
+                                              _profileController
+                                                  .specialistModel
+                                                  .value
+                                                  .data![index]
+                                                  .selected!
+                                                  .value = value!;
+                                              _profileController
+                                                  .specialistShowListData
+                                                  .clear();
+                                              for (var item
+                                                  in _profileController
+                                                      .specialistModel
+                                                      .value
+                                                      .data!) {
+                                                if (item.selected!.value) {
+                                                  _profileController
+                                                      .specialistShowListData
+                                                      .add(item.specialistname
+                                                          .capitalize
+                                                          .toString());
+                                                }
+                                              }
+                                            })
+                                      ],
+                                    ),
+                                  );
+                                });
+                              }),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 0,right: 0,bottom:0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Tok2DocButton2("Save ", () {
+                                  Get.back();
+                                }),
+                              ),
 
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  : Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: const [
+                          CircularProgressIndicator(),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text("Loading Please wait...")
+                        ],
+                      ),
+                    );
+            }),
+          );
+        });
+  }
 
-    degree = pref.getString("DegreeName")!;
-    concentration = pref.getString("ConcentrationName")!;
-    institutionName = pref.getString("institutionName")!;
-    degreeId = pref.getString("DegreeId")!;
-    ConcentrationId = pref.getString("concentrationId")!;
-    print("degree---------    ${degree}");
-    print("concentration---------    ${concentration}");
-    print("institutionName---------    ${institutionName}");
-    print("degreeId---------    ${degreeId}");
-    print("ConcentrationId---------    ${ConcentrationId}");
+  showDegreeDialogue() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            insetPadding: EdgeInsets.symmetric(horizontal: 16),
+            child: Obx(() {
+              return _profileController.degreelistLoading.value
+                  ? Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "    Select Specialty",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 16),
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                icon: const Icon(Icons.clear))
+                          ],
+                        ),
+                        ListView.builder(
+                            itemCount: _profileController.degreelistModel.value
+                                .data!.medicalDegree!.length,
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.all(16),
+                            physics: const BouncingScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              MedicalDegree item = _profileController
+                                  .degreelistModel
+                                  .value
+                                  .data!
+                                  .medicalDegree![index];
+                              return Obx(() {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 6),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          child: Text(
+                                              item.medicaldegree.toString())),
+                                      Checkbox(
+                                          value: item.selected!.value,
+                                          onChanged: (value) {
+                                            _profileController
+                                                .degreelistModel
+                                                .value
+                                                .data!
+                                                .medicalDegree![index]
+                                                .selected!
+                                                .value = value!;
+                                            _profileController
+                                                .degreeShowListData
+                                                .clear();
+                                            for (var item in _profileController
+                                                .degreelistModel
+                                                .value
+                                                .data!
+                                                .medicalDegree!) {
+                                              if (item.selected!.value) {
+                                                _profileController
+                                                    .degreeShowListData
+                                                    .add(item.medicaldegree!
+                                                        .capitalize
+                                                        .toString());
+                                              }
+                                            }
+                                          })
+                                    ],
+                                  ),
+                                );
+                              });
+                            }),
+                        Container(
+                          padding: EdgeInsets.only(left: 0,right: 0,bottom:0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Tok2DocButton2("Save ", () {
+                                  Get.back();
+                                }),
+                              ),
 
-
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  : Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: const [
+                          CircularProgressIndicator(),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text("Loading Please wait...")
+                        ],
+                      ),
+                    );
+            }),
+          );
+        });
   }
 
   @override
   void initState() {
     super.initState();
     controller.getData();
-    getdegreeData();
-    var gender = controller.selectedGender;
-    var gendera = controller.selectedGender;
     setState(() {});
   }
 
@@ -122,6 +327,19 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     var deviceWidth = MediaQuery.of(context).size.width;
     var deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      // appBar: PreferredSize(
+      //     preferredSize: const Size.fromHeight(78.0), // here the desired height
+      //     child: AppBar(
+      //       backgroundColor: const Color(0xff0E7ECD),
+      //       title: const Text("Complete Your Profile"),
+      //       centerTitle: true,
+      //       shape: const RoundedRectangleBorder(
+      //         borderRadius: BorderRadius.vertical(
+      //           bottom: Radius.circular(30),
+      //         ),
+      //       ),
+      //       // ...
+      //     )),
       body: Obx(() {
         return SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -139,6 +357,176 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     child: Column(
                       // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        /*Column(
+                          children: [
+                            GestureDetector(onTap: (){
+                              showDialog(
+                                  context: context,
+
+                                  builder: (BuildContext context) {
+                                    return Dialog(
+
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(10.0)), //this right here
+                                      child: SingleChildScrollView(
+                                        child: Container(
+                                          padding: EdgeInsets.only(left: 25,right: 25,top: 10,bottom: 15),
+                                          child: Column(
+                                            children: [
+                                              ...List.generate(
+                                                  _controllera.model.value.data!.length,
+                                                      (index) =>
+                                                      Container(
+                                                        margin: const EdgeInsets.only(bottom: 10),
+                                                        decoration: BoxDecoration(
+                                                            borderRadius: BorderRadius.circular(8),
+                                                            border: Border.all(
+                                                                color: _controllera.model.value.data![index].isselected == true
+                                                                    ? AppTheme.primaryColor
+                                                                    : AppTheme.greyColor
+                                                            )
+                                                        ),
+                                                        child: CheckboxListTile(
+                                                            checkColor: Colors.white,
+                                                            activeColor: AppTheme.primaryColor,
+                                                            contentPadding: const EdgeInsets.all(0),
+                                                            controlAffinity: ListTileControlAffinity.leading,
+                                                            // title: Text(checkListItems[index]["title"]),
+                                                            title: Text(_controllera.model.value.data![index].specialistname),
+                                                            value: _controllera.model.value.data![index].isselected,
+                                                            onChanged: (value) {
+                                                              _controllera.model.value.data![index].isselected = value;
+                                                              // if(controller.model.value.data![index].isselected)
+                                                              //   {
+                                                              //     controller.multipleSelected.add(controller.model.value.data![index].id);
+                                                              //     setState(() {
+                                                              //
+                                                              //     });
+                                                              //   }
+                                                              // else
+                                                              //   {
+                                                              //     controller.multipleSelected.remove(controller.model.value.data![index].id);
+                                                              //     setState(() {
+                                                              //
+                                                              //     });
+                                                              //   }
+                                                              setState(() {});
+                                                              setState(() {});
+                                                            }
+                                                        ),
+                                                      )),
+                                              SizedBox(
+                                                height: 40,
+                                              ),
+                                              Tok2DocButton(AppStrings.save, () {
+                                                // String selectedSpecilist = "";
+                                                _profileController.specialistValue = "";
+                                                for(var item in _controllera.model.value.data!){
+                                                  if(item.isselected == true) {
+                                                    if (_profileController.specialistValue == "") {
+                                                      _profileController.specialistValue = item.id.toString();
+                                                    }
+                                                    else {
+                                                      _profileController.specialistValue =
+                                                          _profileController.specialistValue + "," + item.id.toString();
+                                                    }
+                                                  }
+                                                }
+                                                print(_profileController.specialistValue);
+                                                if (_profileController.specialistValue == "") {
+                                                  showSnackBar('Edit Speciality Status',
+                                                      'Please Select atLeast on speciality.');
+                                                }
+                                                else {
+                                                  // print("dngjfhdnjgjfg$selectedSpecilist");
+                                                  showLoadingIndicatorDialog(context);
+                                                  doctorSpecialityUpdate(context, _profileController.specialistValue.toString(),
+                                                  ).then((value) {
+                                                    // _profileController.specialistValue = selectedSpecilist;
+                                                    showToast(value.message);
+                                                    if (value.status == true) {
+                                                      _profileController.getData();
+                                                      // for(var item in _profileController.model.value.data!.specialist){
+                                                      //   item.
+                                                      // };
+                                                      setState(() {
+
+                                                      });
+                                                      Navigator.pop(context);
+                                                    }
+                                                    return null;
+                                                  });
+                                                }
+                                              })
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    );
+                                  });
+                            },child: const Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Add Specialist',
+                                  style: TextStyle(
+                                      height: 3.0,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600),
+                                )),),
+
+                         */
+                        /*   SizedBox(
+                              height: 15,
+                            ),
+
+                            SizedBox(
+                              height: 40,
+                            ),*/ /*
+                           */
+                        /* Tok2DocButton(AppStrings.save, () {
+                              // String selectedSpecilist = "";
+                              _profileController.specialistValue = "";
+                              for(var item in controller.model.value.data!){
+                                if(item.isselected == true) {
+                                  if (_profileController.specialistValue == "") {
+                                    _profileController.specialistValue = item.id.toString();
+                                  }
+                                  else {
+                                    _profileController.specialistValue =
+                                        _profileController.specialistValue + "," + item.id.toString();
+                                  }
+                                }
+                              }
+                              print(_profileController.specialistValue);
+                              if (_profileController.specialistValue == "") {
+                                showSnackBar('Edit Speciality Status',
+                                    'Please Select atLeast on speciality.');
+                              }
+                              else {
+                                // print("dngjfhdnjgjfg$selectedSpecilist");
+                                showLoadingIndicatorDialog(context);
+                                doctorSpecialityUpdate(context, _profileController.specialistValue.toString(),
+                                ).then((value) {
+                                  // _profileController.specialistValue = selectedSpecilist;
+                                  showToast(value.message);
+                                  if (value.status == true) {
+                                    _profileController.getData();
+                                    // for(var item in _profileController.model.value.data!.specialist){
+                                    //   item.
+                                    // };
+                                    setState(() {
+
+                                    });
+                                    Navigator.pop(context);
+                                  }
+                                  return null;
+                                });
+                              }
+                            })*/
+                        /*
+                          ],
+                        ),*/
                         CupertinoButton(
                           onPressed: () {
                             showModalBottomSheet(
@@ -186,7 +574,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             radius: 50,
                             child: ClipRRect(
                                 borderRadius: BorderRadius.circular(1000),
-                                child: controller.selectedImage == null ? controller.model.value.data!.profileImage
+                                child: controller.selectedImage == null
+                                    ? controller.model.value.data!.profileImage
                                             .isEmpty
                                         ? const Icon(
                                             Icons.camera_alt,
@@ -216,7 +605,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                                     const Icon(Icons.error),
                                           )
                                     : Image.file(
-                                  controller.selectedImage!,
+                                        controller.selectedImage!,
                                         fit: BoxFit.cover,
                                         width: deviceWidth,
                                         height: deviceHeight,
@@ -288,7 +677,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         const Align(
                             alignment: Alignment.centerLeft,
                             heightFactor: 1.5,
-
                             child: Text(
                               "Email",
                               style: TextStyle(
@@ -304,11 +692,10 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               EmailValidator(errorText: "Enter valid email"),
                             ]),
                             controller: controller.emailController,
-                            enabled: true,
+                            //enabled: t,
                             hintText: "Enter Email",
                             obscureText: false.obs),
-                        alignUserFields(
-                            "Date of Birth", 'YYYY-MM-DD',
+                        alignUserFields("Date of Birth", 'YYYY-MM-DD',
                             controller.dobController, () async {
                           DateTime? pickedDate = await showDatePicker(
                             context: context,
@@ -325,7 +712,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           } else {
                             controller.dobController.text =
                                 DateFormat('yyyy-MM-dd')
-                                    .format(pickedDate!)
+                                    .format(pickedDate)
                                     .toString();
                           }
                         }),
@@ -361,37 +748,36 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                   fontWeight: FontWeight.w500,
                                   height: 2),
                             )),
-                        Container(
-                          height: 60,
-                          padding: const EdgeInsets.only(left: 12.0),
-                          decoration: BoxDecoration(
-                            color: AppTheme.primaryColor.withOpacity(0.04),
-                            borderRadius: BorderRadius.circular(12.0),
-                            // border: Border.all(color: Colors.grey, style: BorderStyle.solid, width: 0.80),
-                          ),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                              isExpanded: true,
-                              hint: const Text('Select Gender'),
-                              // Not necessary for Option 1
-                              value: controller.selectedGender == ""
-                                  ? null
-                                  : controller.selectedGender,
-                              onChanged: (newValue) {
-                                setState(() {
-                                  controller.selectedGender =
-                                  newValue as String?;
-                                });
-                              },
-                              items: controller.genderList.map((location) {
-                                return DropdownMenuItem(
-                                  value: location,
-                                  child: Text(location),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ),
+                        /* Container(
+                    height: 60,
+                    padding: const EdgeInsets.only(left: 12.0),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primaryColor.withOpacity(0.04),
+                      borderRadius: BorderRadius.circular(12.0),
+                      // border: Border.all(color: Colors.grey, style: BorderStyle.solid, width: 0.80),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                        isExpanded: true,
+                        hint: const Text('Select Gender'),
+                        value: controller.selectedGender == ""
+                            ? null
+                            : controller.selectedGender,
+                        onChanged: (newValue) {
+                          setState(() {
+                            controller.selectedGender =
+                            newValue as String?;
+                          });
+                        },
+                        items: controller.genderList.map((location) {
+                          return DropdownMenuItem(
+                            value: location,
+                            child: Text(location),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),*/
                         const Align(
                             alignment: Alignment.centerLeft,
                             heightFactor: 1.5,
@@ -420,7 +806,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           ),
                           child: Obx(() {
                             return !_categoryListController.isDataLoading.value
-                                ? CircularProgressIndicator()
+                                ? const CircularProgressIndicator()
                                 : Container(
                                     height: 65,
                                     padding: const EdgeInsets.only(left: 12.0),
@@ -435,7 +821,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                         isExpanded: true,
                                         hint: const Text('Select Category'),
                                         // Not necessary for Option 1
-                                        value: controller.selectedCategory == "" ? null
+                                        value: controller.selectedCategory == ""
+                                            ? null
                                             : controller.selectedCategory,
                                         onChanged: (newValue) {
                                           setState(() {
@@ -460,12 +847,73 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                   );
                           }),
                         ),
-                        Align(
-                            alignment: Alignment.centerLeft,
-                            heightFactor: 1.5,
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Align(
+                                alignment: Alignment.centerLeft,
+                                heightFactor: 1.5,
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 8.0),
+                                  child: Text(
+                                    'Degree',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        height: 2),
+                                  ),
+                                )),
+                          ],
+                        ),
+                        InkWell(
+                          onTap: () {
+                            showDegreeDialogue();
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 1.2, color: Colors.grey),
+                                borderRadius: BorderRadius.circular(14)),
+                            width: double.maxFinite,
+                            constraints: const BoxConstraints(minHeight: 54),
+                            padding: const EdgeInsets.all(14),
                             child: Row(
                               children: [
-                                const Padding(
+                                Expanded(
+                                  child: Obx(() {
+                                    return Wrap(
+                                      spacing: 6,
+                                      runSpacing: 4,
+                                      children:
+                                          _profileController.degreeShowListData
+                                              .map((element) => Text(
+                                                    element + ",",
+                                                    style: const TextStyle(
+                                                        color: Colors.grey,
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ))
+                                              .toList(),
+                                    );
+                                  }),
+                                ),
+                                const Icon(
+                                  Icons.arrow_drop_down_outlined,
+                                  size: 26,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Align(
+                                alignment: Alignment.centerLeft,
+                                heightFactor: 1.5,
+                                child: Padding(
                                   padding: EdgeInsets.only(left: 8.0),
                                   child: Text(
                                     'Specialist',
@@ -474,114 +922,83 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                         fontWeight: FontWeight.w500,
                                         height: 2),
                                   ),
-                                ),
-                                const Spacer(),
-                                GestureDetector(
-                                  onTap: () {
-                                    Get.toNamed(MyRouter.editSpecialistScreen);
-                                  },
-                                  child: CircleAvatar(
-                                      radius: 12,
-                                      backgroundColor:
-                                          AppTheme.greyColor.withOpacity(0.2),
-                                      child:
-                                          Image.asset("assets/icon/edit.png")),
-                                )
-                              ],
-                            )),
-                        ListView(
-                          primary: true,
-                          physics: const BouncingScrollPhysics(),
-                          shrinkWrap: true,
-                          children: <Widget>[
-                            Container(
-                              width: deviceWidth,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 12),
-                              decoration: BoxDecoration(
-                                // color: AppTheme.primaryColor.withOpacity(0.04),
-                                borderRadius: BorderRadius.circular(12.0),
-                                border: Border.all(
-                                    color: Colors.grey,
-                                    style: BorderStyle.solid,
-                                    width: 0.80),
-                              ),
-                              child:  Wrap(
-                                spacing: 16.0,
-                                runSpacing: 0.0,
-                                children: List<Widget>.generate(
-                                    controller.model.value.data!.specialist
-                                        .length, (int index) {
-                                  return Chip(
-                                      backgroundColor: const Color(0xffF5F5F5),
-                                      label: Text(controller.model.value.data!
-                                          .specialist[index].specialistname
-                                          .toString()));
-                                }).toList(),
-                              ),
-                            ),
+                                )),
                           ],
                         ),
-                        Align(
-                            alignment: Alignment.centerLeft,
-                            heightFactor: 1.5,
+
+                        InkWell(
+                          onTap: () {
+                            showSpecialistDialogue();
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 1.2, color: Colors.grey),
+                                borderRadius: BorderRadius.circular(14)),
+                            width: double.maxFinite,
+                            constraints: const BoxConstraints(minHeight: 54),
+                            padding: const EdgeInsets.all(14),
                             child: Row(
                               children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 8.0),
-                                  child: Text(
-                                    'Medical Degrees',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        height: 2),
+                                Expanded(
+                                  child: Wrap(
+                                    spacing: 6,
+                                    runSpacing: 4,
+                                    children: _profileController
+                                        .specialistShowListData
+                                        .map((element) => Text(
+                                              element + ",",
+                                              style: const TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500),
+                                            ))
+                                        .toList(),
                                   ),
                                 ),
-                                const Spacer(),
-                                GestureDetector(
-                                  onTap: () {
-                                    Get.toNamed(MyRouter.addMedicalDegreesScreen);
-                                  },
-                                  child: CircleAvatar(
-                                    radius: 12,
-                                    backgroundColor:
-                                        AppTheme.greyColor.withOpacity(0.2),
-                                    child: Image.asset("assets/icon/edit.png"),
-                                  ),
+                                const Icon(
+                                  Icons.arrow_drop_down_outlined,
+                                  size: 26,
                                 )
                               ],
-                            )),
-                        ListView(
-                          primary: true,
-                          physics: const BouncingScrollPhysics(),
-                          shrinkWrap: true,
-                          children: <Widget>[
-                            Container(
-                              width: deviceWidth,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 12),
-                              decoration: BoxDecoration(
-                                // color: AppTheme.primaryColor.withOpacity(0.04),
-                                borderRadius: BorderRadius.circular(12.0),
-                                border: Border.all(
-                                    color: Colors.grey,
-                                    style: BorderStyle.solid,
-                                    width: 0.80),
-                              ),
-                              child: Wrap(
-                                spacing: 16.0,
-                                runSpacing: 0.0,
-                                children:
-                                List<Widget>.generate(1, (int index) {
-                                  return Chip(
-                                      backgroundColor: const Color(0xffF5F5F5),
-                                      label: Text(degree.toString()));
-                                }).toList(),
-                              ),
                             ),
-                          ],
+                          ),
                         ),
-                        SizedBox(
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        // if(showSpecialist.value)
+                        // // Obx(() {
+                        // //   return Wrap(
+                        // //     runSpacing: 2,
+                        // //     spacing: 6,
+                        // //     children: _profileController.specialistModel.value
+                        // //         .data!.map((e) =>
+                        // //         FilterChip(
+                        // //             label: Text(e.specialistname.toString(),style: TextStyle(
+                        // //                 color: e.selected!.value ? Colors.white : Colors.black
+                        // //             ),),
+                        // //             checkmarkColor: Colors.white,
+                        // //             selected: e.selected!.value,
+                        // //             selectedColor: Colors.lightBlue.shade800,
+                        // //             backgroundColor: Colors.grey.shade200,
+                        // //             onSelected: (value) {
+                        // //               e.selected!.value = value;
+                        // //             })).toList(),
+                        // //   );
+                        // // }),
+                        //   Column(
+                        //     children: [
+                        //       if(_profileController.specialistLoaded.value)
+                        //         Obx(() {
+                        //           return Container(
+                        //             height: 300,
+                        //             child:,
+                        //           );
+                        //         }),
+                        //     ],
+                        //   ),
+                        const SizedBox(
                           height: 12,
                         ),
                         Container(
@@ -592,7 +1009,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               style: TextStyle(
                                   fontSize: 14, fontWeight: FontWeight.w500),
                             )),
-                        SizedBox(
+                        const SizedBox(
                           height: 8,
                         ),
                         TextFormField(
@@ -630,14 +1047,14 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Document 1',
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w500),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       GestureDetector(
@@ -672,20 +1089,20 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                           // }
                                         },
                                         child: Container(
-                                          padding: EdgeInsets.all(55),
+                                          padding: const EdgeInsets.all(55),
                                           decoration: BoxDecoration(
                                             color: const Color(0xffF5F5F5),
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                           ),
                                           child: Container(
-                                            padding: EdgeInsets.all(15),
+                                            padding: const EdgeInsets.all(15),
                                             decoration: BoxDecoration(
                                               color: const Color(0xffc4c4c4),
                                               borderRadius:
                                                   BorderRadius.circular(50),
                                             ),
-                                            child: Align(
+                                            child: const Align(
                                                 alignment:
                                                     Alignment.bottomCenter,
                                                 child: Icon(Icons
@@ -694,7 +1111,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                         ),
                                       ),
                                       //documentName1.toString() ? Text('') : Container(),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 5,
                                       ),
                                       document1.value.path == ""
@@ -705,7 +1122,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                               // .last,
                                               overflow: TextOverflow.ellipsis,
                                               textAlign: TextAlign.start,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w500),
                                             )
@@ -716,7 +1133,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                                   .last,
                                               overflow: TextOverflow.ellipsis,
                                               textAlign: TextAlign.start,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w500),
                                             ),
@@ -733,7 +1150,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                       //               fontWeight: FontWeight.w500),
                                       //         ),
                                       //       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                     ],
@@ -743,14 +1160,14 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Document 2',
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w500),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       GestureDetector(
@@ -760,45 +1177,22 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                               .then((value) {
                                             document2.value = value;
                                           });
-                                          // var picked = await FilePicker.platform.pickFiles(
-                                          //   type: FileType.custom,
-                                          //   allowedExtensions: ['pdf', 'doc'],
-                                          // );
-                                          //
-                                          // if (picked != null) {
-                                          //   var nameFull =
-                                          //       picked.files.first.name;
-                                          //   documentName1 = nameFull;
-                                          //   documentPath1 =
-                                          //       File(picked.files.first.path!);
-                                          //   setState(() {
-                                          //     var nameFull =
-                                          //         picked.files.first.name;
-                                          //     documentName1 = nameFull;
-                                          //     documentPath1 =
-                                          //         File(picked.files.first.path!);
-                                          //   });
-                                          //   print(picked.files.first.name);
-                                          //   print(picked.files.first.path);
-                                          // } else {
-                                          //   // User canceled the picker
-                                          // }
                                         },
                                         child: Container(
-                                          padding: EdgeInsets.all(55),
+                                          padding: const EdgeInsets.all(55),
                                           decoration: BoxDecoration(
                                             color: const Color(0xffF5F5F5),
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                           ),
                                           child: Container(
-                                            padding: EdgeInsets.all(15),
+                                            padding: const EdgeInsets.all(15),
                                             decoration: BoxDecoration(
                                               color: const Color(0xffc4c4c4),
                                               borderRadius:
                                                   BorderRadius.circular(50),
                                             ),
-                                            child: Align(
+                                            child: const Align(
                                                 alignment:
                                                     Alignment.bottomCenter,
                                                 child: Icon(Icons
@@ -807,7 +1201,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                         ),
                                       ),
                                       //documentName1.toString() ? Text('') : Container(),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 5,
                                       ),
                                       document2.value.path == ""
@@ -818,7 +1212,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                               // .last,
                                               overflow: TextOverflow.ellipsis,
                                               textAlign: TextAlign.start,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w500),
                                             )
@@ -829,31 +1223,19 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                                   .last,
                                               overflow: TextOverflow.ellipsis,
                                               textAlign: TextAlign.start,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w500),
                                             ),
 
-                                      // documentName1.toString() == null
-                                      //     ? Text('')
-                                      //     : Container(
-                                      //         child: Text(
-                                      //           documentName1.toString(),
-                                      //           overflow: TextOverflow.ellipsis,
-                                      //           textAlign: TextAlign.start,
-                                      //           style: TextStyle(
-                                      //               fontSize: 14,
-                                      //               fontWeight: FontWeight.w500),
-                                      //         ),
-                                      //       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                     ],
                                   ),
                                 ],
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 6,
                               ),
                               Row(
@@ -865,14 +1247,14 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Document 3',
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w500),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       GestureDetector(
@@ -882,45 +1264,22 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                               .then((value) {
                                             document3.value = value;
                                           });
-                                          // var picked = await FilePicker.platform.pickFiles(
-                                          //   type: FileType.custom,
-                                          //   allowedExtensions: ['pdf', 'doc'],
-                                          // );
-                                          //
-                                          // if (picked != null) {
-                                          //   var nameFull =
-                                          //       picked.files.first.name;
-                                          //   documentName1 = nameFull;
-                                          //   documentPath1 =
-                                          //       File(picked.files.first.path!);
-                                          //   setState(() {
-                                          //     var nameFull =
-                                          //         picked.files.first.name;
-                                          //     documentName1 = nameFull;
-                                          //     documentPath1 =
-                                          //         File(picked.files.first.path!);
-                                          //   });
-                                          //   print(picked.files.first.name);
-                                          //   print(picked.files.first.path);
-                                          // } else {
-                                          //   // User canceled the picker
-                                          // }
                                         },
                                         child: Container(
-                                          padding: EdgeInsets.all(55),
+                                          padding: const EdgeInsets.all(55),
                                           decoration: BoxDecoration(
                                             color: const Color(0xffF5F5F5),
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                           ),
                                           child: Container(
-                                            padding: EdgeInsets.all(15),
+                                            padding: const EdgeInsets.all(15),
                                             decoration: BoxDecoration(
                                               color: const Color(0xffc4c4c4),
                                               borderRadius:
                                                   BorderRadius.circular(50),
                                             ),
-                                            child: Align(
+                                            child: const Align(
                                                 alignment:
                                                     Alignment.bottomCenter,
                                                 child: Icon(Icons
@@ -929,7 +1288,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                         ),
                                       ),
                                       //documentName1.toString() ? Text('') : Container(),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 5,
                                       ),
                                       document3.value.path == ""
@@ -940,7 +1299,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                               // .last,
                                               overflow: TextOverflow.ellipsis,
                                               textAlign: TextAlign.start,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w500),
                                             )
@@ -951,24 +1310,12 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                                   .last,
                                               overflow: TextOverflow.ellipsis,
                                               textAlign: TextAlign.start,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w500),
                                             ),
 
-                                      // documentName1.toString() == null
-                                      //     ? Text('')
-                                      //     : Container(
-                                      //         child: Text(
-                                      //           documentName1.toString(),
-                                      //           overflow: TextOverflow.ellipsis,
-                                      //           textAlign: TextAlign.start,
-                                      //           style: TextStyle(
-                                      //               fontSize: 14,
-                                      //               fontWeight: FontWeight.w500),
-                                      //         ),
-                                      //       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                     ],
@@ -978,14 +1325,14 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Document 4',
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w500),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       GestureDetector(
@@ -995,45 +1342,22 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                               .then((value) {
                                             document4.value = value;
                                           });
-                                          // var picked = await FilePicker.platform.pickFiles(
-                                          //   type: FileType.custom,
-                                          //   allowedExtensions: ['pdf', 'doc'],
-                                          // );
-                                          //
-                                          // if (picked != null) {
-                                          //   var nameFull =
-                                          //       picked.files.first.name;
-                                          //   documentName1 = nameFull;
-                                          //   documentPath1 =
-                                          //       File(picked.files.first.path!);
-                                          //   setState(() {
-                                          //     var nameFull =
-                                          //         picked.files.first.name;
-                                          //     documentName1 = nameFull;
-                                          //     documentPath1 =
-                                          //         File(picked.files.first.path!);
-                                          //   });
-                                          //   print(picked.files.first.name);
-                                          //   print(picked.files.first.path);
-                                          // } else {
-                                          //   // User canceled the picker
-                                          // }
                                         },
                                         child: Container(
-                                          padding: EdgeInsets.all(55),
+                                          padding: const EdgeInsets.all(55),
                                           decoration: BoxDecoration(
                                             color: const Color(0xffF5F5F5),
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                           ),
                                           child: Container(
-                                            padding: EdgeInsets.all(15),
+                                            padding: const EdgeInsets.all(15),
                                             decoration: BoxDecoration(
                                               color: const Color(0xffc4c4c4),
                                               borderRadius:
                                                   BorderRadius.circular(50),
                                             ),
-                                            child: Align(
+                                            child: const Align(
                                                 alignment:
                                                     Alignment.bottomCenter,
                                                 child: Icon(Icons
@@ -1042,7 +1366,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                         ),
                                       ),
                                       //documentName1.toString() ? Text('') : Container(),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 5,
                                       ),
                                       document4.value.path == ""
@@ -1053,7 +1377,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                               // .last,
                                               overflow: TextOverflow.ellipsis,
                                               textAlign: TextAlign.start,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w500),
                                             )
@@ -1064,24 +1388,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                                   .last,
                                               overflow: TextOverflow.ellipsis,
                                               textAlign: TextAlign.start,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w500),
                                             ),
-
-                                      // documentName1.toString() == null
-                                      //     ? Text('')
-                                      //     : Container(
-                                      //         child: Text(
-                                      //           documentName1.toString(),
-                                      //           overflow: TextOverflow.ellipsis,
-                                      //           textAlign: TextAlign.start,
-                                      //           style: TextStyle(
-                                      //               fontSize: 14,
-                                      //               fontWeight: FontWeight.w500),
-                                      //         ),
-                                      //       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                     ],
@@ -1091,68 +1402,128 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             ],
                           );
                         }),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Tok2DocButton(AppStrings.updateProfile, () {
                           if (_formKey.currentState!.validate()) {
-
+                            var splist = '';
                             var meDegrees = '';
-                            // for (var specilist
-                            //     in controller.model.value.data!.specialist) {
+                            // for (var specilist in specialistList) {
                             //   if (splist == '') {
-                            //     splist = specilist.id.toString();
+                            //     splist = specilist;
                             //   } else {
-                            //     splist = splist + ',' + specilist.id.toString();
+                            //     splist = splist + ',' + specilist;
                             //     print("splist::" + splist);
                             //   }
                             // }
+                            specialistValue = "";
+                            for (var item in _profileController
+                                .specialistModel.value.data!) {
+                              if (item.selected!.value) {
+                                if (specialistValue == "") {
+                                  specialistValue = item.id.toString();
+                                } else {
+                                  specialistValue = specialistValue +
+                                      "," +
+                                      item.id.toString();
+                                }
+                              }
+                            }
+                            degreeslistValue = "";
+                            for (var item in _profileController
+                                .degreelistModel.value.data!.medicalDegree!) {
+                              if (item.selected!.value) {
+                                if (degreeslistValue == "") {
+                                  degreeslistValue = item.id.toString();
+                                } else {
+                                  degreeslistValue = degreeslistValue +
+                                      "," +
+                                      item.id.toString();
+                                }
+                              }
+                            }
 
-                            for (var degrees in controller.model.value.data!.medicalDegree) {
+                            for (var degrees in DegreeList) {
                               if (meDegrees == '') {
-                                meDegrees = degrees.id.toString();
+                                meDegrees = degrees.toString();
                               } else {
-                                meDegrees = '$meDegrees,${degrees.id}';
+                                meDegrees = '$meDegrees,${degrees}';
                               }
                             }
 
                             print("""object""");
                             // showLoadingIndicatorDialog(context);
-                            updateDoctorRegister(
-                              context,
-                              controller.nameController.text,
-                              controller.emailController.text,
-                              controller.mobileController.text,
-                              controller.dobController.text,
-                              controller.experienceController.text,
-                              controller.selectedGender ??
-                                  controller.model.value.data!.gender,
-                              controller.selectedCategory ?? categreeId,
-                              controller.specialistValue,
-                              "data:image/jpg;base64,${controller.base64Image}",
-                              controller.aboutController.text,
-                              degreeId,
-                              ConcentrationId,
-                              institutionName,
-                              document1: document1.value,
-                              document2: document2.value,
-                              document3: document3.value,
-                              document4: document4.value,
-                            ).then((value) {
-                              if (value.status) {
-                                controller.getData();
-                                // getProfileData();
-                                Navigator.push(
-                                       context,
-                                       MaterialPageRoute(builder: (context) =>  BottomNavBarCustom(1)),
-                                     );
-                                showToast(value.message);
-                              }
-                              return null;
-                            });
+
+                            if (controller.selectedGender == "") {
+                              showToast("Please select Gender");
+                            } else if (controller.selectedCategory == "") {
+                              showToast("Please select Category");
+                            }
+                            /*else if (degreeId == null) {
+                        showToast("Please select degree");
+                      } */
+                            else {
+                              updateDoctorRegister(
+                                context,
+                                controller.nameController.text,
+                                controller.emailController.text,
+                                controller.mobileController.text,
+                                controller.dobController.text,
+                                controller.experienceController.text,
+                                controller.selectedGender ??
+                                    controller.model.value.data!.gender,
+                                controller.selectedCategory ?? categreeId,
+                                specialistValue,
+                                "data:image/jpg;base64,${controller.base64Image}",
+                                controller.aboutController.text,
+                                degreeslistValue,
+                                "1",
+                                "gr",
+                                document1: document1.value,
+                                document2: document2.value,
+                                document3: document3.value,
+                                document4: document4.value,
+                              ).then((value) {
+                                Get.back();
+                                if (value.status) {
+                                  controller.getData();
+                                  showToast(value.message);
+                                  // getProfileData();
+                                  // showDialog(
+                                  //     context: context,
+                                  //     builder: (BuildContext context) {
+                                  //       return AlertDialog(
+                                  //         title: const Text('Welcome'),
+                                  //         // To display the title it is optional
+                                  //         content: const Text(
+                                  //             'Thanks for completing your profile, we will get back to you shortly with your profile approval update '),
+                                  //         // Message which will be pop up on the screen
+                                  //         // Action widget which will provide the user to acknowledge the choice
+                                  //         actions: [
+                                  //           TextButton(
+                                  //             onPressed: () {
+                                  //               Get.offAllNamed(
+                                  //                   MyRouter.loginScreen);
+                                  //               // Navigator.pop(context);
+                                  //             },
+                                  //             child: const Text('ACCEPT'),
+                                  //           ),
+                                  //         ],
+                                  //       );
+                                  //     });
+                                }
+                              });
+                            }
+
+                            /*if (degreeId != null) {
+
+
+                            } else {
+                              showToast("Please select degree");
+                            }*/
                           } else {
-                            //showToast(value.message);
-                            showToast("profile not Updated");
+                            // showToast("profile not Updated");
                           }
                         }),
                         SizedBox(
@@ -1166,6 +1537,47 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       }),
     );
   }
+
+/*  Widget getListView() {
+    return ListView.builder(
+      itemCount: _myActivities!.length,
+      itemBuilder: (context, index){
+        return cardView(_myActivities![index]);
+      },
+    );
+  }
+  Widget cardView(item) {
+
+    var fullName = item;
+
+    return MultiSelectDialogField(
+      items:fullName,
+      title: Text("Animals"),
+      selectedColor: Colors.blue,
+      decoration: BoxDecoration(
+        color: Colors.blue.withOpacity(0.1),
+        borderRadius: BorderRadius.all(Radius.circular(40)),
+        border: Border.all(
+          color: Colors.blue,
+          width: 2,
+        ),
+      ),
+      buttonIcon: Icon(
+        Icons.pets,
+        color: Colors.blue,
+      ),
+      buttonText: Text(
+        "Favorite Animals",
+        style: TextStyle(
+          color: Colors.blue[800],
+          fontSize: 16,
+        ),
+      ),
+      onConfirm: (results) {
+       // _myActivities = results;
+      },
+    );
+  }*/
 
   Widget alignUserFields(
       String fieldName, hintText, TextEditingController controller, onTap) {
@@ -1208,7 +1620,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     if (image != null) {
       setState(() {
         controller.selectedImage = File(image.path);
-        controller.base64Image = base64Encode(controller.selectedImage!.readAsBytesSync());
+        controller.base64Image =
+            base64Encode(controller.selectedImage!.readAsBytesSync());
         // print("object$base64Image");
       });
     }

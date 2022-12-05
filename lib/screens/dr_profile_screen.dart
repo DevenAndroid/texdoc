@@ -315,7 +315,7 @@ class _DrProfileScreenState extends State<DrProfileScreen> {
 
                             ...List.generate(model.value.data!.length,
                                 (index) => Container(
-                                      margin: const EdgeInsets.only(bottom: 10),
+                                      margin: const EdgeInsets.only(bottom: 1),
 
                                    /*   decoration: BoxDecoration(
                                           border: Border(
@@ -356,32 +356,8 @@ class _DrProfileScreenState extends State<DrProfileScreen> {
                                                   "--:--")
                                                   : const Text("--:--"),
                                             ) : new Container(),
-
-                                            /*InkWell(
-                                                onTap: () {
-                                                  if (model.value.data![index].isAvailable == true) {
-                                                    //  displayOpenTimeDialog(index);
-                                                  }
-                                                },
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      horizontal: 12.0,
-                                                      vertical: 12.0),
-                                                  child: model.value
-                                                              .data![index].open
-                                                              .toString() !=
-                                                          ""
-                                                      ? Text(model
-                                                              .value
-                                                              .data![index]
-                                                              .open ??
-                                                          "--:--")
-                                                      : const Text("--:--"),
-                                                )),*/
                                             const Spacer(),
                                             model.value.data![index].isAvailable == true? new Text("To") : new Container(),
-
                                             const Spacer(),
                                             model.value.data![index].isAvailable == true? new Padding(
                                               padding:
@@ -399,61 +375,13 @@ class _DrProfileScreenState extends State<DrProfileScreen> {
                                                   "--:--")
                                                   : const Text("--:--"),
                                             ) : new Container(),
-                                           /* InkWell(
-                                              onTap: () {
-                                                if (model.value.data![index]
-                                                        .isAvailable ==
-                                                    true) {
-                                                  // displayCloseTimeDialog(index);
-                                                }
-                                              },
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 12.0,
-                                                        vertical: 12.0),
-                                                child: model.value.data![index]
-                                                            .close
-                                                            .toString() !=
-                                                        ""
-                                                    ? Text(model
-                                                            .value
-                                                            .data![index]
-                                                            .close ??
-                                                        "--:--")
-                                                    : const Text("--:--"),
-                                              ),
-                                            ),*/
                                             model.value.data![index].isAvailable == true? new   Divider() : new Container(),
 
                                           ],
                                         ),
                                       ),
                                     )),
-                            /*Text(
-                        "about",
-                        style: const TextStyle(fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            height: 1.8),),
-                      SizedBox(height: 48.h,),*/
-                            /* Tok2DocButton(AppStrings.getConsultation, () {
-                        // Get.defaultDialog(
-                        //     title: "Welcome",
-                        //     // middleText: "Please Subscribe Plane To take benifits.",
-                        //     // backgroundColor: Colors.green,
-                        //     titleStyle: TextStyle(color: Colors.black),
-                        //     middleTextStyle: TextStyle(color: Colors.white),
-                        //     textConfirm: "Buy Plan",
-                        //     onConfirm: (){Get.toNamed(MyRouter.packageAndPaymentScreen);},
-                        //     // textCancel: "Cancel",
-                        //     // cancelTextColor: Colors.white,
-                        //     confirmTextColor: Colors.white,
-                        //     buttonColor: AppTheme.primaryColor,
-                        //     barrierDismissible: true,
-                        //     radius: 20,
-                        //     content: const Text('Please Subscribe Plane To take benifits.')
-                        // );
-                      }),*/
+
                           ],
                         ),
                       ),
