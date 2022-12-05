@@ -115,6 +115,15 @@ class UserProfileController extends GetxController {
       isDataLoading.value = true;
       model.value = value;
       if (value.status == true) {
+        FirebaseFirestore.instance
+            .collection("user_collection")
+            .doc(value.data!.id.toString())
+            .set({
+          "user_id": value.data!.id.toString(),
+          "user_name": value.data!.name.toString(),
+          "user_image": value.data!.profileImage.toString(),
+          "token": token,
+        });
         if(specialUpdate == true) {
           specialistValue == "";
           for (var item in value.data!.specialist) {
@@ -135,15 +144,6 @@ class UserProfileController extends GetxController {
             }
           }
         }
-        FirebaseFirestore.instance
-            .collection("user_collection")
-            .doc(value.data!.id.toString())
-            .set({
-          "user_id": value.data!.id.toString(),
-          "user_name": value.data!.name.toString(),
-          "user_image": value.data!.profileImage.toString(),
-          "token": token,
-        });
         if (reload == true) {
           updateSpecialist();
           updateDegreelist();

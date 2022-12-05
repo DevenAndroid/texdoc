@@ -77,9 +77,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
                   final item = snapshot.data!.docs[index];
-                  var timeStamp1 = (item["timeStamp"]).toDate();
-                  var time = DateFormat('hh:mm a').format(timeStamp1);
-                  var date = DateFormat('dd/MM/yyyy').format(timeStamp1);
+                  var timeStamp1 = item.toString().contains("timeStamp") ? item["timeStamp"].toString() : DateTime.now().toString();
+                  var time = DateFormat('hh:mm a').format(DateTime.parse(timeStamp1));
+                  var date = DateFormat('dd/MM/yyyy').format(DateTime.parse(timeStamp1));
                   var datetime=date+", "+time;
 
 

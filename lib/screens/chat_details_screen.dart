@@ -343,17 +343,21 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                         }
                         print(item.toString());
                         return ChatBubble(
+                            firstMessage: item["message"].toString() == "Basic Information that123qwe147asd33" ? item["message"].toString() : "",
+                            age: item["message"].toString() == "Basic Information that123qwe147asd33" ? item["initialMessage"]["age"] : "",
+                            gender: item["message"].toString() == "Basic Information that123qwe147asd33" ? item["initialMessage"]["gender"] : "",
+                            problemText: item["message"].toString() == "Basic Information that123qwe147asd33" ?
+                            item["initialMessage"].toString().contains("problem") ? item["initialMessage"]["problem"] : ""  : "",
+                            name: newName,
                             text: item["message"],
                             sendImage: item["message"].toString() == "Shared Image from user123123132131" ? item["image"] : "",
-                            date_time:timeDate,
-
-                            // snapshot.data!.docs[index].toString().contains('image') == true ? item["image"] : null,
                             image: widget.sendProfile,
                             image1: profileController.model.value.data!.profileImage,
+                            date_time: timeDate,
                             //imageOther:"data:image/jpg;base64,${base64Image}",
                             isCurrentUser: item["myId"].toString() ==
-                                    profileController.model.value.data!.id
-                                        .toString()
+                                profileController.model.value.data!.id
+                                    .toString()
                                 ? true
                                 : false);
                       },
