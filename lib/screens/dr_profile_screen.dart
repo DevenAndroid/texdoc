@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -19,7 +20,7 @@ import '../models/api_models/model_login_response.dart';
 import '../repository/get_time_repository.dart';
 
 class DrProfileScreen extends StatefulWidget {
-  DrProfileScreen({Key? key}) : super(key: key);
+  const DrProfileScreen({Key? key}) : super(key: key);
 
   @override
   State<DrProfileScreen> createState() => _DrProfileScreenState();
@@ -229,13 +230,33 @@ class _DrProfileScreenState extends State<DrProfileScreen> {
                                             fontWeight: FontWeight.w400,
                                             color: AppTheme.greyColor),
                                       ),
-                                      Text(
-                                        0.toString(),
-                                        style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.black,
-                                            height: 1.5),
+
+                                      StreamBuilder<dynamic>(
+                                          stream: FirebaseFirestore.instance
+                                              .collection("firebase_users")
+                                              .doc(controller
+                                              .model.value.data!.id.toString())
+                                              .collection("chat_list")
+                                              .snapshots(),
+                                          builder: (context, snapshot) {
+                                            if(snapshot.hasData){
+                                              return Text(
+                                                snapshot.data!.docs.length.toString(),
+                                                style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.black,
+                                                    height: 1.5),
+                                              );
+                                            }
+                                            return const Text("0",
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.black,
+                                                  height: 1.5),
+                                            );
+                                          }
                                       )
                                     ],
                                   ),

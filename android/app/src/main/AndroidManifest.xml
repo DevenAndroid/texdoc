@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.eoxysIt.texdoc">
+    package="com.texdoctor.texdoctor">
    <application
         android:label="TexDoc Doctor"
         android:name="${applicationName}"

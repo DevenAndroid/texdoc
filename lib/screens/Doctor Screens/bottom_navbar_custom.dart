@@ -38,7 +38,7 @@ class _BottomNavBarCustomState extends State<BottomNavBarCustom> {
   final pages = [
     const AllHealthTipScreen(),
     // const ChatScreen(),
-    DrProfileScreen(),
+    const DrProfileScreen(),
     const MyProfileScreen(),
   ];
 
@@ -121,7 +121,7 @@ class _BottomNavBarCustomState extends State<BottomNavBarCustom> {
               children: [
                 SizedBox(height: MediaQuery.of(context).size.height*0.04,),
                 ListTile(
-                  contentPadding: EdgeInsets.only(left: 12.0),
+                  contentPadding: const EdgeInsets.only(left: 12.0),
                   leading: CircleAvatar(
                     radius: 30,
                     // backgroundImage: AssetImage(AppAssets.doctorF),

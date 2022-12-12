@@ -13,20 +13,21 @@ import 'package:texdoc/app_utils/utils.dart';
 import '../routers/my_router.dart';
 
 Future<ModelCommonResponse> updateDoctorRegister(
-  context,
-  name,
-  email,
-  phone,
-  dateOfBirth,
-  experience,
-  gender,
-  categreeId,
-  specialistId,
-  profileImage,
-  aboutMe,
-  medical_degree_id,
-  concentration_ids,
-  institution_name, {
+    {
+ required context,
+ required name,
+ required email,
+ required phone,
+ required dateOfBirth,
+ required experience,
+ required gender,
+ required categreeId,
+ required specialistId,
+ required profileImage,
+ required aboutMe,
+ required medical_degree_id,
+ required concentration_ids,
+ required institution_name,
   required File document1,
   required File document2,
   required File document3,
@@ -52,7 +53,9 @@ Future<ModelCommonResponse> updateDoctorRegister(
   request.fields['gender'] = gender;
   request.fields['categree_id'] = categreeId;
   request.fields['specialist_id'] = specialistId;
-  request.fields['profile_image'] = profileImage;
+  if(profileImage != "") {
+    request.fields['profile_image'] = profileImage;
+  }
   request.fields['about_me'] = aboutMe;
   request.fields['medical_degree_id'] = medical_degree_id;
   request.fields['concentration_ids'] = concentration_ids;

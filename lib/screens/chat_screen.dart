@@ -21,41 +21,13 @@ class _ChatScreenState extends State<ChatScreen> {
   final profileController = Get.put(UserProfileController());
 
   @override
-  void initState() {
-    super.initState();
-    // getMyId();
-  }
-
-  int myId = 0;
-
-  // getMyId() async {
-  //   FirebaseFirestore.instance
-  //       .collection("users")
-  //       .doc(FirebaseAuth.instance.currentUser!.uid)
-  //       .get()
-  //       .then((value) {
-  //     myId = value.data()!["time_stamp"];
-  //     print("::::::$myId");
-  //   });
-  // }
-
-  // String chatRoomId(String user1, String user2) {
-  //   if (user1[0].toLowerCase().codeUnits[0] >
-  //       user2[0].toLowerCase().codeUnits[0]) {
-  //     return "$user1$user2";
-  //   } else {
-  //     return "$user2$user1";
-  //   }
-  // }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(78.0), // here the desired height
           child: AppBar(
             backgroundColor: const Color(0xff0E7ECD),
-            title: Text("Chat"),
+            title: const Text("Chat"),
             centerTitle: true,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(
@@ -65,7 +37,6 @@ class _ChatScreenState extends State<ChatScreen> {
             // ...
           )),
       body: StreamBuilder(
-          // stream: FirebaseFirestore.instance.collection("messages").where("user_id", isEqualTo: firebaseAuth.currentUser!.uid.toString()).snapshots(),
           stream: FirebaseFirestore.instance
               .collection("firebase_users")
               .doc(profileController.model.value.data!.id.toString())
@@ -93,8 +64,6 @@ class _ChatScreenState extends State<ChatScreen> {
                         otherId: int.parse(item["sender_id"] ?? "0"),
                         sendProfile: item["send_profile"],
                       ));
-                      await firebaseAuth.currentUser!.reload();
-                      print("AAAAAA${item["send_profile"]}");
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
@@ -109,9 +78,9 @@ class _ChatScreenState extends State<ChatScreen> {
                               fit: BoxFit.cover,
                               imageUrl: item["send_profile"],
                               errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
+                                  const Icon(Icons.error),
                               placeholder: (context, url) =>
-                                  CircularProgressIndicator(),
+                                  const CircularProgressIndicator(),
                             ),
                           ),
                         ),
@@ -128,9 +97,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 },
               );
             } else {
-              return Text("No chat Aveliable");
+              return const Text("No chat Aveliable");
             }
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           })),
     );
   }

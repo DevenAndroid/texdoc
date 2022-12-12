@@ -25,7 +25,7 @@ class UserProfileController extends GetxController {
   String? selectedCategory;
   String? selectedGender;
   File? selectedImage;
-  String? base64Image;
+  String base64Image = "";
   List<String> names = [];
   late final List<Specialist> specialist;
   List<String> genderList = ['Male', 'Female'];

@@ -219,7 +219,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
-                              "    Select Specialty",
+                              "    Select Degree",
                               style: TextStyle(
                                   fontWeight: FontWeight.w500, fontSize: 16),
                             ),
@@ -482,7 +482,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 
                             SizedBox(
                               height: 40,
-                            ),*/ /*
+                            ),*/
+                        /*
                            */
                         /* Tok2DocButton(AppStrings.save, () {
                               // String selectedSpecilist = "";
@@ -1042,196 +1043,200 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        'Document 1',
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () async {
-                                          NewHelper()
-                                              .addFilePicker()
-                                              .then((value) {
-                                            document1.value = value;
-                                          });
-                                          // var picked = await FilePicker.platform.pickFiles(
-                                          //   type: FileType.custom,
-                                          //   allowedExtensions: ['pdf', 'doc'],
-                                          // );
-                                          //
-                                          // if (picked != null) {
-                                          //   var nameFull =
-                                          //       picked.files.first.name;
-                                          //   documentName1 = nameFull;
-                                          //   documentPath1 =
-                                          //       File(picked.files.first.path!);
-                                          //   setState(() {
-                                          //     var nameFull =
-                                          //         picked.files.first.name;
-                                          //     documentName1 = nameFull;
-                                          //     documentPath1 =
-                                          //         File(picked.files.first.path!);
-                                          //   });
-                                          //   print(picked.files.first.name);
-                                          //   print(picked.files.first.path);
-                                          // } else {
-                                          //   // User canceled the picker
-                                          // }
-                                        },
-                                        child: Container(
-                                          padding: const EdgeInsets.all(55),
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xffF5F5F5),
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'Document 1',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () async {
+                                            NewHelper()
+                                                .addFilePicker()
+                                                .then((value) {
+                                              document1.value = value;
+                                            });
+                                            // var picked = await FilePicker.platform.pickFiles(
+                                            //   type: FileType.custom,
+                                            //   allowedExtensions: ['pdf', 'doc'],
+                                            // );
+                                            //
+                                            // if (picked != null) {
+                                            //   var nameFull =
+                                            //       picked.files.first.name;
+                                            //   documentName1 = nameFull;
+                                            //   documentPath1 =
+                                            //       File(picked.files.first.path!);
+                                            //   setState(() {
+                                            //     var nameFull =
+                                            //         picked.files.first.name;
+                                            //     documentName1 = nameFull;
+                                            //     documentPath1 =
+                                            //         File(picked.files.first.path!);
+                                            //   });
+                                            //   print(picked.files.first.name);
+                                            //   print(picked.files.first.path);
+                                            // } else {
+                                            //   // User canceled the picker
+                                            // }
+                                          },
                                           child: Container(
-                                            padding: const EdgeInsets.all(15),
+                                            padding: const EdgeInsets.all(55),
                                             decoration: BoxDecoration(
-                                              color: const Color(0xffc4c4c4),
+                                              color: const Color(0xffF5F5F5),
                                               borderRadius:
-                                                  BorderRadius.circular(50),
+                                                  BorderRadius.circular(12),
                                             ),
-                                            child: const Align(
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                child: Icon(Icons
-                                                    .file_upload_outlined)),
+                                            child: Container(
+                                              padding: const EdgeInsets.all(15),
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xffc4c4c4),
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                              ),
+                                              child: const Align(
+                                                  alignment:
+                                                      Alignment.bottomCenter,
+                                                  child: Icon(Icons
+                                                      .file_upload_outlined)),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      //documentName1.toString() ? Text('') : Container(),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      document1.value.path == ""
-                                          ? Text(
-                                              controller.names[0],
-                                              // .toString()
-                                              // .split("/")
-                                              // .last,
-                                              overflow: TextOverflow.ellipsis,
-                                              textAlign: TextAlign.start,
-                                              style: const TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500),
-                                            )
-                                          : Text(
-                                              document1.value.path
-                                                  .toString()
-                                                  .split("/")
-                                                  .last,
-                                              overflow: TextOverflow.ellipsis,
-                                              textAlign: TextAlign.start,
-                                              style: const TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
+                                        //documentName1.toString() ? Text('') : Container(),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        document1.value.path == ""
+                                            ? Text(
+                                                controller.names[0],
+                                                // .toString()
+                                                // .split("/")
+                                                // .last,
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.start,
+                                                style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500),
+                                              )
+                                            : Text(
+                                                document1.value.path
+                                                    .toString()
+                                                    .split("/")
+                                                    .last,
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.start,
+                                                style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500),
+                                              ),
 
-                                      // documentName1.toString() == null
-                                      //     ? Text('')
-                                      //     : Container(
-                                      //         child: Text(
-                                      //           documentName1.toString(),
-                                      //           overflow: TextOverflow.ellipsis,
-                                      //           textAlign: TextAlign.start,
-                                      //           style: TextStyle(
-                                      //               fontSize: 14,
-                                      //               fontWeight: FontWeight.w500),
-                                      //         ),
-                                      //       ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                    ],
+                                        // documentName1.toString() == null
+                                        //     ? Text('')
+                                        //     : Container(
+                                        //         child: Text(
+                                        //           documentName1.toString(),
+                                        //           overflow: TextOverflow.ellipsis,
+                                        //           textAlign: TextAlign.start,
+                                        //           style: TextStyle(
+                                        //               fontSize: 14,
+                                        //               fontWeight: FontWeight.w500),
+                                        //         ),
+                                        //       ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        'Document 2',
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () async {
-                                          NewHelper()
-                                              .addFilePicker()
-                                              .then((value) {
-                                            document2.value = value;
-                                          });
-                                        },
-                                        child: Container(
-                                          padding: const EdgeInsets.all(55),
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xffF5F5F5),
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'Document 2',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () async {
+                                            NewHelper()
+                                                .addFilePicker()
+                                                .then((value) {
+                                              document2.value = value;
+                                            });
+                                          },
                                           child: Container(
-                                            padding: const EdgeInsets.all(15),
+                                            padding: const EdgeInsets.all(55),
                                             decoration: BoxDecoration(
-                                              color: const Color(0xffc4c4c4),
+                                              color: const Color(0xffF5F5F5),
                                               borderRadius:
-                                                  BorderRadius.circular(50),
+                                                  BorderRadius.circular(12),
                                             ),
-                                            child: const Align(
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                child: Icon(Icons
-                                                    .file_upload_outlined)),
+                                            child: Container(
+                                              padding: const EdgeInsets.all(15),
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xffc4c4c4),
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                              ),
+                                              child: const Align(
+                                                  alignment:
+                                                      Alignment.bottomCenter,
+                                                  child: Icon(Icons
+                                                      .file_upload_outlined)),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      //documentName1.toString() ? Text('') : Container(),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      document2.value.path == ""
-                                          ? Text(
-                                              controller.names[1],
-                                              // .toString()
-                                              // .split("/")
-                                              // .last,
-                                              overflow: TextOverflow.ellipsis,
-                                              textAlign: TextAlign.start,
-                                              style: const TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500),
-                                            )
-                                          : Text(
-                                              document2.value.path
-                                                  .toString()
-                                                  .split("/")
-                                                  .last,
-                                              overflow: TextOverflow.ellipsis,
-                                              textAlign: TextAlign.start,
-                                              style: const TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
+                                        //documentName1.toString() ? Text('') : Container(),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        document2.value.path == ""
+                                            ? Text(
+                                                controller.names[1],
+                                                // .toString()
+                                                // .split("/")
+                                                // .last,
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.start,
+                                                style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500),
+                                              )
+                                            : Text(
+                                                document2.value.path
+                                                    .toString()
+                                                    .split("/")
+                                                    .last,
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.start,
+                                                style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500),
+                                              ),
 
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                    ],
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
@@ -1242,160 +1247,164 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        'Document 3',
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () async {
-                                          NewHelper()
-                                              .addFilePicker()
-                                              .then((value) {
-                                            document3.value = value;
-                                          });
-                                        },
-                                        child: Container(
-                                          padding: const EdgeInsets.all(55),
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xffF5F5F5),
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'Document 3',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () async {
+                                            NewHelper()
+                                                .addFilePicker()
+                                                .then((value) {
+                                              document3.value = value;
+                                            });
+                                          },
                                           child: Container(
-                                            padding: const EdgeInsets.all(15),
+                                            padding: const EdgeInsets.all(55),
                                             decoration: BoxDecoration(
-                                              color: const Color(0xffc4c4c4),
+                                              color: const Color(0xffF5F5F5),
                                               borderRadius:
-                                                  BorderRadius.circular(50),
+                                                  BorderRadius.circular(12),
                                             ),
-                                            child: const Align(
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                child: Icon(Icons
-                                                    .file_upload_outlined)),
+                                            child: Container(
+                                              padding: const EdgeInsets.all(15),
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xffc4c4c4),
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                              ),
+                                              child: const Align(
+                                                  alignment:
+                                                      Alignment.bottomCenter,
+                                                  child: Icon(Icons
+                                                      .file_upload_outlined)),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      //documentName1.toString() ? Text('') : Container(),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      document3.value.path == ""
-                                          ? Text(
-                                              controller.names[2],
-                                              // .toString()
-                                              // .split("/")
-                                              // .last,
-                                              overflow: TextOverflow.ellipsis,
-                                              textAlign: TextAlign.start,
-                                              style: const TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500),
-                                            )
-                                          : Text(
-                                              document3.value.path
-                                                  .toString()
-                                                  .split("/")
-                                                  .last,
-                                              overflow: TextOverflow.ellipsis,
-                                              textAlign: TextAlign.start,
-                                              style: const TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
+                                        //documentName1.toString() ? Text('') : Container(),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        document3.value.path == ""
+                                            ? Text(
+                                                controller.names[2],
+                                                // .toString()
+                                                // .split("/")
+                                                // .last,
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.start,
+                                                style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500),
+                                              )
+                                            : Text(
+                                                document3.value.path
+                                                    .toString()
+                                                    .split("/")
+                                                    .last,
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.start,
+                                                style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500),
+                                              ),
 
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                    ],
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        'Document 4',
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () async {
-                                          NewHelper()
-                                              .addFilePicker()
-                                              .then((value) {
-                                            document4.value = value;
-                                          });
-                                        },
-                                        child: Container(
-                                          padding: const EdgeInsets.all(55),
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xffF5F5F5),
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'Document 4',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () async {
+                                            NewHelper()
+                                                .addFilePicker()
+                                                .then((value) {
+                                              document4.value = value;
+                                            });
+                                          },
                                           child: Container(
-                                            padding: const EdgeInsets.all(15),
+                                            padding: const EdgeInsets.all(55),
                                             decoration: BoxDecoration(
-                                              color: const Color(0xffc4c4c4),
+                                              color: const Color(0xffF5F5F5),
                                               borderRadius:
-                                                  BorderRadius.circular(50),
+                                                  BorderRadius.circular(12),
                                             ),
-                                            child: const Align(
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                child: Icon(Icons
-                                                    .file_upload_outlined)),
+                                            child: Container(
+                                              padding: const EdgeInsets.all(15),
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xffc4c4c4),
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                              ),
+                                              child: const Align(
+                                                  alignment:
+                                                      Alignment.bottomCenter,
+                                                  child: Icon(Icons
+                                                      .file_upload_outlined)),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      //documentName1.toString() ? Text('') : Container(),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      document4.value.path == ""
-                                          ? Text(
-                                              controller.names[3],
-                                              // .toString()
-                                              // .split("/")
-                                              // .last,
-                                              overflow: TextOverflow.ellipsis,
-                                              textAlign: TextAlign.start,
-                                              style: const TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500),
-                                            )
-                                          : Text(
-                                              document4.value.path
-                                                  .toString()
-                                                  .split("/")
-                                                  .last,
-                                              overflow: TextOverflow.ellipsis,
-                                              textAlign: TextAlign.start,
-                                              style: const TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                    ],
+                                        //documentName1.toString() ? Text('') : Container(),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        document4.value.path == ""
+                                            ? Text(
+                                                controller.names[3],
+                                                // .toString()
+                                                // .split("/")
+                                                // .last,
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.start,
+                                                style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500),
+                                              )
+                                            : Text(
+                                                document4.value.path
+                                                    .toString()
+                                                    .split("/")
+                                                    .last,
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.start,
+                                                style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500),
+                                              ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
@@ -1465,21 +1474,20 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       } */
                             else {
                               updateDoctorRegister(
-                                context,
-                                controller.nameController.text,
-                                controller.emailController.text,
-                                controller.mobileController.text,
-                                controller.dobController.text,
-                                controller.experienceController.text,
-                                controller.selectedGender ??
-                                    controller.model.value.data!.gender,
-                                controller.selectedCategory ?? categreeId,
-                                specialistValue,
-                                "data:image/jpg;base64,${controller.base64Image}",
-                                controller.aboutController.text,
-                                degreeslistValue,
-                                "1",
-                                "gr",
+                                context :context,
+                                name :controller.nameController.text,
+                                email :controller.emailController.text,
+                                phone :controller.mobileController.text,
+                                dateOfBirth :controller.dobController.text,
+                                experience :controller.experienceController.text,
+                                gender :controller.selectedGender ?? controller.model.value.data!.gender,
+                                categreeId :controller.selectedCategory ?? categreeId,
+                                specialistId :specialistValue,
+                                profileImage : controller.base64Image != "" ? "data:image/jpg;base64,${controller.base64Image}" : "",
+                                aboutMe :controller.aboutController.text,
+                                medical_degree_id :degreeslistValue,
+                                concentration_ids :"1",
+                                institution_name :"gr",
                                 document1: document1.value,
                                 document2: document2.value,
                                 document3: document3.value,

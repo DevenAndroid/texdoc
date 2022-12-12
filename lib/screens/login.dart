@@ -147,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
                                   if(pref.getBool('document_verified')!=true){
-                                    Get.offAllNamed(MyRouter.completeProfileScreen);
+                                    Get.toNamed(MyRouter.completeProfileScreen);
 
                                   }else{
                                     Get.offAllNamed(MyRouter.bottomNavBarCustom);

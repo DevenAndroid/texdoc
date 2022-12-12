@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/scheduler.dart';
@@ -28,7 +29,7 @@ class ChatDetailScreen extends StatefulWidget {
   final String sendProfile;
 
 
-  ChatDetailScreen(
+  const ChatDetailScreen(
       {super.key,
       required this.otherId,
       required this.otherName,
@@ -144,7 +145,9 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
       "timeStamp": timeStamp
     }).then((value) async {
       _messageController.clear();
-      print("sending notification");
+      if (kDebugMode) {
+        print("sending notification");
+      }
       sendNotification(
         msgBody: message,
         msgTitle:
@@ -165,7 +168,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
         .set({
       "sender_id": widget.otherId.toString(),
       "sender_name": widget.otherName.toString(),
-      "send_profile": widget.sendProfile,
+      "send_profile": newProfile,
       "last_message": message,
       "timeStamp": timeStamp,
     });
@@ -269,8 +272,6 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   void initState() {
     super.initState();
     createChatNode();
-    // controller.getData(widget.otherId);
-    print(profileController.model.value.data!.profileImage);
     FirebaseFirestore.instance
         .collection("user_collection")
         .doc(widget.otherId.toString())
@@ -282,11 +283,6 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
       print(token);
       print(newName);
       print(newProfile);
-
-      // "user_id": value.data!.id.toString(),
-      // "user_name": value.data!.name.toString(),
-      // "user_image": value.data!.profileImage.toString(),
-      // "token": token,
     });
   }
 

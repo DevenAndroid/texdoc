@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:871390372258:android:a8b908e4da3ba82636d2fb",
         "android_client_info": {
-          "package_name": "com.eoxysIt.texdoc"
+          "package_name": "com.texdoctor.texdoctor"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "871390372258-bpup58hmu31qhj9qbh0adobqhgdspv17.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.eoxysIt.texdoc",
+            "package_name": "com.texdoctor.texdoctor",
             "certificate_hash": "a6a68143aa190be49b46aaa454206c7123ff78c3"
           }
         },
