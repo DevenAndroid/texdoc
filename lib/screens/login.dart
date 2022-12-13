@@ -129,10 +129,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               () {
                                   if(_formKey.currentState!.validate()){
                               showLoadingIndicatorDialog(context);
-                              login(context, "${mobileController.text.trim()}", passwordController.text.trim()).then((value) async {
-                                print("1111111");
+                              login(context, mobileController.text.trim(),
+                                  passwordController.text.trim()
+                              ).then((value) async {
+
                                 if(value.status==true){
-                                  print("1111222");
                                   showSnackBar("login Status 1111222", value.message);
 
                                   // saved login user data
@@ -144,7 +145,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                   pref.setBool('document_verified', value.data!.user.documentVerified);
                                   print("userEmail ${pref.getString('userEmail')}");
                                   print("document_verified to navigate screen ${pref.getBool('document_verified')}");
-
 
                                   if(pref.getBool('document_verified')!=true){
                                     Get.toNamed(MyRouter.completeProfileScreen);

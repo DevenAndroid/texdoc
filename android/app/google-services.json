@@ -1,41 +1,78 @@
 {
   "project_info": {
-    "project_number": "871390372258",
-    "project_id": "texdoc-doctor",
-    "storage_bucket": "texdoc-doctor.appspot.com"
+    "project_number": "836339892697",
+    "project_id": "doctor-app-44c66",
+    "storage_bucket": "doctor-app-44c66.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:871390372258:android:a8b908e4da3ba82636d2fb",
+        "mobilesdk_app_id": "1:836339892697:android:88bf206d4b7d60e95e19c8",
         "android_client_info": {
-          "package_name": "com.texdoctor.texdoctor"
+          "package_name": "com.texdoc.texdoc"
         }
       },
       "oauth_client": [
         {
-          "client_id": "871390372258-bpup58hmu31qhj9qbh0adobqhgdspv17.apps.googleusercontent.com",
+          "client_id": "836339892697-1md9f9e3of074fo5ldsgivnm3krneb7p.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.texdoctor.texdoctor",
-            "certificate_hash": "a6a68143aa190be49b46aaa454206c7123ff78c3"
+            "package_name": "com.texdoc.texdoc",
+            "certificate_hash": "816e508e771bf4ea597323645a662d7dc4ac5f1f"
           }
         },
         {
-          "client_id": "871390372258-2bh1p75ofr6qb4tl691uirdmd2ib6a2m.apps.googleusercontent.com",
+          "client_id": "836339892697-pseiog9pmob8mo10919klfdr9fmr374e.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDwZZgg_W5OkVLwBz5u0JoBTBPmIdCRHM4"
+          "current_key": "AIzaSyCPcyIg5R5OQBEbVWixhUVm2QA2MkeMRp0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "871390372258-2bh1p75ofr6qb4tl691uirdmd2ib6a2m.apps.googleusercontent.com",
+              "client_id": "836339892697-pseiog9pmob8mo10919klfdr9fmr374e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:836339892697:android:f78400c8fda124665e19c8",
+        "android_client_info": {
+          "package_name": "com.texdoctor.texdoctor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "836339892697-00vv6f8ce75h7tiokf7jpbf4asuks0hu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.texdoctor.texdoctor",
+            "certificate_hash": "816e508e771bf4ea597323645a662d7dc4ac5f1f"
+          }
+        },
+        {
+          "client_id": "836339892697-pseiog9pmob8mo10919klfdr9fmr374e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPcyIg5R5OQBEbVWixhUVm2QA2MkeMRp0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "836339892697-pseiog9pmob8mo10919klfdr9fmr374e.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
