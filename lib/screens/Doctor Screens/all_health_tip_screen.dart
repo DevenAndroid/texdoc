@@ -132,7 +132,7 @@ class _AllHealthTipScreenState extends State<AllHealthTipScreen> {
                   CircularProgressIndicator()),
               errorWidget:
                   (context, url, error) =>
-              const Icon(Icons.error),
+              const SizedBox(),
             ),
           ),
         ),

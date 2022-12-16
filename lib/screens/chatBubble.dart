@@ -108,21 +108,23 @@ class _ChatBubbleState extends State<ChatBubble> {
             child: Column(
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const Spacer(),
                     widget.text.toString() != "Shared Image from user123123132131" ?
-                    DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: widget.isCurrentUser ? AppTheme.primaryColor : Colors.grey[300],
-                        borderRadius: BorderRadius.circular(16),
+                    Flexible(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: widget.isCurrentUser ? AppTheme.primaryColor : Colors.grey[300],
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Text(
+                              widget.text,
+                              style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                  color: widget.isCurrentUser ? Colors.white : Colors.black87),
+                            )),
                       ),
-                      child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Text(
-                            widget.text,
-                            style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                color: widget.isCurrentUser ? Colors.white : Colors.black87),
-                          )),
                     ) :
                     Row(
                       children: [
@@ -201,18 +203,20 @@ class _ChatBubbleState extends State<ChatBubble> {
                     ),
                     const SizedBox(width: 8,),
                     widget.text.toString() != "Shared Image from user123123132131" ?
-                    DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: widget.isCurrentUser ? AppTheme.primaryColor : Colors.grey[300],
-                        borderRadius: BorderRadius.circular(16),
+                    Flexible(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: widget.isCurrentUser ? AppTheme.primaryColor : Colors.grey[300],
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Text(
+                              widget.text,
+                              style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                  color: widget.isCurrentUser ? Colors.white : Colors.black87),
+                            )),
                       ),
-                      child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Text(
-                            widget.text,
-                            style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                color: widget.isCurrentUser ? Colors.white : Colors.black87),
-                          )),
                     ) :
                     Row(
                       children: [
@@ -281,37 +285,66 @@ class _ChatBubbleState extends State<ChatBubble> {
                               color: AppTheme.primaryColor
                           ),),
                         const SizedBox(height: 2,),
-                        Text("Age : ${widget.age}",
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              height: 1.25,
-                              fontSize: 15,
-                              color: Colors.black
-                          ),),
+                        if(widget.age != "0" && widget.age != "")
+                          RichText(
+                            text: TextSpan(
+                              text: 'Age : ',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  height: 1.25,
+                                  fontSize: 15,
+                                  color: Colors.black
+                              ),
+                              children: <TextSpan>[
+                                TextSpan(text: widget.age, style: const TextStyle(fontWeight: FontWeight.w500)),
+                              ],
+                            ),
+                          ),
                         const SizedBox(height: 2,),
-                        Text("Gender : ${widget.gender}",
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              height: 1.25,
-                              fontSize: 15,
-                              color: Colors.black
-                          ),),
+                        RichText(
+                          text: TextSpan(
+                            text: 'Gender : ',
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                height: 1.25,
+                                fontSize: 15,
+                                color: Colors.black
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(text: widget.gender, style: const TextStyle(fontWeight: FontWeight.w500)),
+                            ],
+                          ),
+                        ),
                         const SizedBox(height: 2,),
-                        Text("Name : ${widget.name}",
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              height: 1.25,
-                              fontSize: 15,
-                              color: Colors.black
-                          ),),
+                        RichText(
+                          text: TextSpan(
+                            text: 'Name : ',
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                height: 1.25,
+                                fontSize: 15,
+                                color: Colors.black
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(text: widget.name, style: const TextStyle(fontWeight: FontWeight.w500)),
+                            ],
+                          ),
+                        ),
                         const SizedBox(height: 2,),
-                        Text("Problem Description : ${widget.problemText}",
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              height: 1.25,
-                              fontSize: 15,
-                              color: Colors.black
-                          ),),
+                        RichText(
+                          text: TextSpan(
+                            text: 'Problem Description : ',
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                height: 1.25,
+                                fontSize: 15,
+                                color: Colors.black
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(text: widget.problemText, style: const TextStyle(fontWeight: FontWeight.w500)),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),

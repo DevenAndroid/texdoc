@@ -43,9 +43,8 @@ class MyProfileScreen extends StatefulWidget {
 }
 
 class _MyProfileScreenState extends State<MyProfileScreen> {
-  List<String> _myActivities = [];
   String? _myActivitiesResult;
-  final formKey = new GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
   // profileController
   UserProfileController controller = Get.put(UserProfileController());
@@ -76,7 +75,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 
   List<String> DegreeList = ['MBBS', 'BDS', 'BAMS', 'BHMS', 'BUMS', 'BYNS'];
 
-  UserProfileController _profileController = Get.put(UserProfileController());
+  final UserProfileController _profileController = Get.put(UserProfileController());
 
   var degree = "";
   var concentration;
@@ -103,7 +102,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
-                              "    Select Specialty",
+                              "    Select Specialist",
                               style: TextStyle(
                                   fontWeight: FontWeight.w500, fontSize: 16),
                             ),
@@ -172,7 +171,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               }),
                         ),
                         Container(
-                          padding: EdgeInsets.only(left: 0,right: 0,bottom:0),
+                          padding: const EdgeInsets.only(left: 0,right: 0,bottom:0),
                           child: Row(
                             children: [
                               Expanded(
@@ -209,7 +208,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         context: context,
         builder: (context) {
           return Dialog(
-            insetPadding: EdgeInsets.symmetric(horizontal: 16),
+            insetPadding: const EdgeInsets.symmetric(horizontal: 16),
             child: Obx(() {
               return _profileController.degreelistLoading.value
                   ? Column(
@@ -283,7 +282,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               });
                             }),
                         Container(
-                          padding: EdgeInsets.only(left: 0,right: 0,bottom:0),
+                          padding: const EdgeInsets.only(left: 0,right: 0,bottom:0),
                           child: Row(
                             children: [
                               Expanded(
@@ -357,177 +356,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     child: Column(
                       // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        /*Column(
-                          children: [
-                            GestureDetector(onTap: (){
-                              showDialog(
-                                  context: context,
-
-                                  builder: (BuildContext context) {
-                                    return Dialog(
-
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(10.0)), //this right here
-                                      child: SingleChildScrollView(
-                                        child: Container(
-                                          padding: EdgeInsets.only(left: 25,right: 25,top: 10,bottom: 15),
-                                          child: Column(
-                                            children: [
-                                              ...List.generate(
-                                                  _controllera.model.value.data!.length,
-                                                      (index) =>
-                                                      Container(
-                                                        margin: const EdgeInsets.only(bottom: 10),
-                                                        decoration: BoxDecoration(
-                                                            borderRadius: BorderRadius.circular(8),
-                                                            border: Border.all(
-                                                                color: _controllera.model.value.data![index].isselected == true
-                                                                    ? AppTheme.primaryColor
-                                                                    : AppTheme.greyColor
-                                                            )
-                                                        ),
-                                                        child: CheckboxListTile(
-                                                            checkColor: Colors.white,
-                                                            activeColor: AppTheme.primaryColor,
-                                                            contentPadding: const EdgeInsets.all(0),
-                                                            controlAffinity: ListTileControlAffinity.leading,
-                                                            // title: Text(checkListItems[index]["title"]),
-                                                            title: Text(_controllera.model.value.data![index].specialistname),
-                                                            value: _controllera.model.value.data![index].isselected,
-                                                            onChanged: (value) {
-                                                              _controllera.model.value.data![index].isselected = value;
-                                                              // if(controller.model.value.data![index].isselected)
-                                                              //   {
-                                                              //     controller.multipleSelected.add(controller.model.value.data![index].id);
-                                                              //     setState(() {
-                                                              //
-                                                              //     });
-                                                              //   }
-                                                              // else
-                                                              //   {
-                                                              //     controller.multipleSelected.remove(controller.model.value.data![index].id);
-                                                              //     setState(() {
-                                                              //
-                                                              //     });
-                                                              //   }
-                                                              setState(() {});
-                                                              setState(() {});
-                                                            }
-                                                        ),
-                                                      )),
-                                              SizedBox(
-                                                height: 40,
-                                              ),
-                                              Tok2DocButton(AppStrings.save, () {
-                                                // String selectedSpecilist = "";
-                                                _profileController.specialistValue = "";
-                                                for(var item in _controllera.model.value.data!){
-                                                  if(item.isselected == true) {
-                                                    if (_profileController.specialistValue == "") {
-                                                      _profileController.specialistValue = item.id.toString();
-                                                    }
-                                                    else {
-                                                      _profileController.specialistValue =
-                                                          _profileController.specialistValue + "," + item.id.toString();
-                                                    }
-                                                  }
-                                                }
-                                                print(_profileController.specialistValue);
-                                                if (_profileController.specialistValue == "") {
-                                                  showSnackBar('Edit Speciality Status',
-                                                      'Please Select atLeast on speciality.');
-                                                }
-                                                else {
-                                                  // print("dngjfhdnjgjfg$selectedSpecilist");
-                                                  showLoadingIndicatorDialog(context);
-                                                  doctorSpecialityUpdate(context, _profileController.specialistValue.toString(),
-                                                  ).then((value) {
-                                                    // _profileController.specialistValue = selectedSpecilist;
-                                                    showToast(value.message);
-                                                    if (value.status == true) {
-                                                      _profileController.getData();
-                                                      // for(var item in _profileController.model.value.data!.specialist){
-                                                      //   item.
-                                                      // };
-                                                      setState(() {
-
-                                                      });
-                                                      Navigator.pop(context);
-                                                    }
-                                                    return null;
-                                                  });
-                                                }
-                                              })
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    );
-                                  });
-                            },child: const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  'Add Specialist',
-                                  style: TextStyle(
-                                      height: 3.0,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600),
-                                )),),
-
-                         */
-                        /*   SizedBox(
-                              height: 15,
-                            ),
-
-                            SizedBox(
-                              height: 40,
-                            ),*/
-                        /*
-                           */
-                        /* Tok2DocButton(AppStrings.save, () {
-                              // String selectedSpecilist = "";
-                              _profileController.specialistValue = "";
-                              for(var item in controller.model.value.data!){
-                                if(item.isselected == true) {
-                                  if (_profileController.specialistValue == "") {
-                                    _profileController.specialistValue = item.id.toString();
-                                  }
-                                  else {
-                                    _profileController.specialistValue =
-                                        _profileController.specialistValue + "," + item.id.toString();
-                                  }
-                                }
-                              }
-                              print(_profileController.specialistValue);
-                              if (_profileController.specialistValue == "") {
-                                showSnackBar('Edit Speciality Status',
-                                    'Please Select atLeast on speciality.');
-                              }
-                              else {
-                                // print("dngjfhdnjgjfg$selectedSpecilist");
-                                showLoadingIndicatorDialog(context);
-                                doctorSpecialityUpdate(context, _profileController.specialistValue.toString(),
-                                ).then((value) {
-                                  // _profileController.specialistValue = selectedSpecilist;
-                                  showToast(value.message);
-                                  if (value.status == true) {
-                                    _profileController.getData();
-                                    // for(var item in _profileController.model.value.data!.specialist){
-                                    //   item.
-                                    // };
-                                    setState(() {
-
-                                    });
-                                    Navigator.pop(context);
-                                  }
-                                  return null;
-                                });
-                              }
-                            })*/
-                        /*
-                          ],
-                        ),*/
                         CupertinoButton(
                           onPressed: () {
                             showModalBottomSheet(
@@ -603,7 +431,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                                         CircularProgressIndicator()),
                                             errorWidget:
                                                 (context, url, error) =>
-                                                    const Icon(Icons.error),
+                                                    const SizedBox(),
                                           )
                                     : Image.file(
                                         controller.selectedImage!,
@@ -795,8 +623,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         Container(
                           height: 55,
                           width: deviceWidth,
-                          padding:
-                              const EdgeInsets.only(left: 12.0, right: 12.0),
+                          // padding:
+                          //     const EdgeInsets.only(left: 12.0, right: 12.0),
                           decoration: BoxDecoration(
                             // color: AppTheme.primaryColor.withOpacity(0.04),
                             borderRadius: BorderRadius.circular(12.0),
@@ -873,8 +701,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           },
                           child: Container(
                             decoration: BoxDecoration(
+                                color: AppTheme.primaryColor.withOpacity(0.04),
                                 border:
-                                    Border.all(width: 1.2, color: Colors.grey),
+                                    Border.all(width: 1, color: Colors.grey),
                                 borderRadius: BorderRadius.circular(14)),
                             width: double.maxFinite,
                             constraints: const BoxConstraints(minHeight: 54),
@@ -889,7 +718,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                       children:
                                           _profileController.degreeShowListData
                                               .map((element) => Text(
-                                                    element + ",",
+                                                    "$element${_profileController.degreeShowListData.length > 1 ? "," : ""}",
                                                     style: const TextStyle(
                                                         color: Colors.grey,
                                                         fontSize: 16,
@@ -933,8 +762,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           },
                           child: Container(
                             decoration: BoxDecoration(
+                              color: AppTheme.primaryColor.withOpacity(0.04),
                                 border:
-                                    Border.all(width: 1.2, color: Colors.grey),
+                                    Border.all(width: 1, color: Colors.grey),
                                 borderRadius: BorderRadius.circular(14)),
                             width: double.maxFinite,
                             constraints: const BoxConstraints(minHeight: 54),
@@ -948,7 +778,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                     children: _profileController
                                         .specialistShowListData
                                         .map((element) => Text(
-                                              element + ",",
+                                              "$element${_profileController.specialistShowListData.length > 1 ? "," : ""}",
                                               style: const TextStyle(
                                                   color: Colors.grey,
                                                   fontSize: 16,

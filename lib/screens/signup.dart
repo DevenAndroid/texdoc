@@ -22,8 +22,6 @@ import 'package:texdoc/widgets/tok2DocTextField.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:intl/intl.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
@@ -408,57 +406,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               mobileNumberController.text.toString(),
                               emailController.text.toString(),
                               passwordController.text.toString()).then((value) {
-                            print("kumari22 ");
-
                             if (value.status == true) {
-                              createUser(name:fullNameController.text.trim(),id:mobileNumberController.text.trim(),email:emailController.text.trim());
                               Get.toNamed(MyRouter.loginScreen);
-
-                              //  check firebase account create
-                              /*try {
-                                FirebaseAuth.instance
-                                    .createUserWithEmailAndPassword(
-                                    email: emailController.text,
-                                    password: mobileNumberController.text).then((
-                                    value) async {
-                                  await FirebaseAuth.instance.currentUser!.reload();
-                                  FirebaseAuth.instance.currentUser!
-                                      .updateDisplayName(fullNameController.text)
-                                      .then((value) {
-                                    fireStore.collection("users").doc(
-                                        FirebaseAuth.instance.currentUser!.uid).set(
-                                        {
-                                          "user_id": FirebaseAuth.instance
-                                              .currentUser!.uid.toString(),
-                                          "user_email": FirebaseAuth.instance
-                                              .currentUser!.email.toString(),
-                                          "user_name": FirebaseAuth.instance
-                                              .currentUser!.displayName.toString(),
-                                          "time_stamp": DateTime
-                                              .now()
-                                              .millisecondsSinceEpoch,
-                                        });
-
-                                    Get.toNamed(MyRouter.loginScreen);
-                                    // Get.toNamed(MyRouter.verifyYourNumberScreen, arguments: [mobileNumberController.text, "signUp"]);
-                                    FirebaseAuth.instance.currentUser!.reload();
-                                  });
-                                }).catchError((e) {
-                                  print("loku" + e.toString());
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text(e.toString())));
-                                });
-                              } on FirebaseException catch (e) {
-                                print("lokuu" + e.toString());
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(e.toString())));
-                                throw Exception(e);
-                              } catch (e) {
-                                print("lokuu222" + e.toString());
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(e.toString())));
-                                throw Exception(e);
-                              }*/
                             }
                             return null;
                           });
@@ -580,26 +529,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ],
       );
 
-  createUser({required String name, required String id, required String email}) async {
-    //reference to document
-    final docUser = FirebaseFirestore.instance.collection('users').doc(int.parse(id).toString());
-
-    // using json
-    // final json = {
-    //   'name': name,
-    //   'id':id,
-    //   'email': email,
-    // };
-
-    // using fbuser class model
-    final user = FBUser(id: id, name: name, email: email
-    );
-    //dynamic json
-    final json = user.toJson();
-
-    await docUser.set(json);
-
-  }
+  // createUser({required String name, required String id, required String email}) async {
+  //   //reference to document
+  //   final docUser = FirebaseFirestore.instance.collection('users').doc(int.parse(id).toString());
+  //
+  //   // using json
+  //   // final json = {
+  //   //   'name': name,
+  //   //   'id':id,
+  //   //   'email': email,
+  //   // };
+  //
+  //   // using fbuser class model
+  //   final user = FBUser(id: id, name: name, email: email
+  //   );
+  //   //dynamic json
+  //   final json = user.toJson();
+  //
+  //   await docUser.set(json);
+  //
+  // }
 
 
 }

@@ -365,7 +365,6 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                 }),
           ),
           Container(
-            height: 52,
             margin: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
                 color: const Color(0xffEEEFFC),

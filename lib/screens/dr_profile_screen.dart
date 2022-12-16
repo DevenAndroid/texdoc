@@ -161,7 +161,7 @@ class _DrProfileScreenState extends State<DrProfileScreen> {
                                 placeholder: (context, url) => const Center(
                                     child: CircularProgressIndicator()),
                                 errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
+                                    const SizedBox(),
                               ),
                             ),
                           ),
@@ -207,7 +207,7 @@ class _DrProfileScreenState extends State<DrProfileScreen> {
                               height: 10.h,
                             ),
                             const Text(
-                              "availableNow",
+                              "Available Now",
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w400,
@@ -337,13 +337,6 @@ class _DrProfileScreenState extends State<DrProfileScreen> {
                             ...List.generate(model.value.data!.length,
                                 (index) => Container(
                                       margin: const EdgeInsets.only(bottom: 1),
-
-                                   /*   decoration: BoxDecoration(
-                                          border: Border(
-                                        bottom: BorderSide(
-                                          color: const Color(0xFFE9E9E9),
-                                        ),
-                                      )),*/
                                       child: Container(
                                         //  height: 100,
                                         width:
@@ -356,12 +349,10 @@ class _DrProfileScreenState extends State<DrProfileScreen> {
                                           //crossAxisAlignment: CrossAxisAlignment.center,
                                           // mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            model.value.data![index].isAvailable == true? new Text(model.value.data![index].day!.replaceFirst(model.value.data![index].day![0],model.value.data![index].day![0].toUpperCase()) ?? "") : new Container(),
-
-
-                                            const Spacer(),
-
-                                            model.value.data![index].isAvailable == true? new Padding(
+                                            Expanded(child: model.value.data![index].isAvailable == true?
+                                            Text(model.value.data![index].day!.replaceFirst(model.value.data![index].day![0],model.value.data![index].day![0].toUpperCase()) ?? "") :
+                                            Container(),),
+                                            Expanded(child: model.value.data![index].isAvailable == true? Padding(
                                               padding: const EdgeInsets
                                                   .symmetric(
                                                   horizontal: 12.0,
@@ -376,11 +367,9 @@ class _DrProfileScreenState extends State<DrProfileScreen> {
                                                   .open ??
                                                   "--:--")
                                                   : const Text("--:--"),
-                                            ) : new Container(),
-                                            const Spacer(),
-                                            model.value.data![index].isAvailable == true? new Text("To") : new Container(),
-                                            const Spacer(),
-                                            model.value.data![index].isAvailable == true? new Padding(
+                                            ) : Container(),),
+                                            Expanded(child: model.value.data![index].isAvailable == true? const Text("To") : Container(),),
+                                            Expanded(child: model.value.data![index].isAvailable == true? Padding(
                                               padding:
                                               const EdgeInsets.symmetric(
                                                   horizontal: 12.0,
@@ -395,9 +384,8 @@ class _DrProfileScreenState extends State<DrProfileScreen> {
                                                   .close ??
                                                   "--:--")
                                                   : const Text("--:--"),
-                                            ) : new Container(),
-                                            model.value.data![index].isAvailable == true? new   Divider() : new Container(),
-
+                                            ) : Container(),),
+                                            // Expanded(child: model.value.data![index].isAvailable == true? const Divider() : Container(),)
                                           ],
                                         ),
                                       ),

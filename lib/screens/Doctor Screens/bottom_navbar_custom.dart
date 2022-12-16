@@ -13,7 +13,6 @@ import 'package:texdoc/screens/dr_profile_screen.dart';
 import 'package:texdoc/screens/my_profile_screen.dart';
 import '../../controller/main_home_screen_controller.dart';
 import 'all_health_tip_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class BottomNavBarCustom extends StatefulWidget {
   int? drawerNavigateIndex;
@@ -174,25 +173,6 @@ class _BottomNavBarCustomState extends State<BottomNavBarCustom> {
                             case 5:
                               // logout from app
                               getLogout();
-                                // logout from firebase
-                                try {
-                                  print("Working logout");
-                                  FirebaseAuth.instance.signOut().then((value) {
-                                    Get.toNamed(MyRouter.loginScreen);
-                                  }).catchError((e) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(content: Text(e.toString())));
-                                  });
-                                } on FirebaseException catch (e) {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(content: Text(e.toString())));
-                                  throw Exception(e);
-                                } catch (e) {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(content: Text(e.toString())));
-                                  throw Exception(e);
-                                }
-
                               break;
                           }
                         });
@@ -299,8 +279,8 @@ class _BottomNavBarCustomState extends State<BottomNavBarCustom> {
   getLogout() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.clear();
+    Get.offAllNamed(MyRouter.loginScreen);
   }
-
 }
 
 

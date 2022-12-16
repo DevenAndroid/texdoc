@@ -1,14 +1,8 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:getwidget/components/dropdown/gf_multiselect.dart';
-import 'package:getwidget/types/gf_checkbox_type.dart';
-import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:texdoc/app_utils/loading_indicator.dart';
 import 'package:texdoc/controller/category_list_controller.dart';
 import 'package:texdoc/controller/get-user-profile_controller.dart';
 import 'package:texdoc/repository/update-doctor-register_repository.dart';
@@ -23,16 +17,10 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
-import '../../app_utils/api_constant.dart';
-import '../../controller/doctor_Speciality_list_controller.dart';
 import '../../models/api_models/model_degree_&_concentration_response.dart';
-import '../../models/api_models/model_login_response.dart';
-import '../../models/api_models/model_speciality_list_response.dart';
-import '../../repository/speciality_update_repository.dart';
 
 class CompleteProfileScreen extends StatefulWidget {
   const CompleteProfileScreen({Key? key}) : super(key: key);
@@ -567,7 +555,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                 CircularProgressIndicator()),
                             errorWidget:
                                 (context, url, error) =>
-                            const Icon(Icons.error),
+                            const SizedBox(),
                           )
                               : Image.file(
                             controller.selectedImage!,

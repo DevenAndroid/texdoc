@@ -29,7 +29,7 @@ log("loginApiUrl Map values$map}");
     // hide loader
     // Get.back();
     var bodyData = jsonDecode(response.body);
-    showToast(bodyData['message']);
+    showToast("Otp has been sent successfully");
     // Fluttertoast.showToast(
     //     msg:bodyData['message'],
     //     toastLength: Toast.LENGTH_SHORT,

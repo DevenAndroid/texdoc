@@ -1,27 +1,6 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:texdoc/app_utils/loading_indicator.dart';
-import 'package:texdoc/repository/doctor-login_repository.dart';
-import 'package:texdoc/repository/firebase_methods.dart';
-import 'package:texdoc/resources/app_assets.dart';
-import 'package:texdoc/resources/app_theme.dart';
-import 'package:texdoc/resources/strings.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:texdoc/routers/my_router.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:texdoc/app_utils/utils.dart';
-
-import 'package:texdoc/widgets/tok2DocTextField.dart';
-import 'package:texdoc/widgets/tok2DocButton.dart';
-import 'package:form_field_validator/form_field_validator.dart';
-
 
 class ChatImageFull extends StatefulWidget {
   final String image;
@@ -70,7 +49,7 @@ class _ChatImageFullState extends State<ChatImageFull> {
                             fit: BoxFit.cover,
                             imageUrl: widget.image,
                             errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
+                                SizedBox(),
                             placeholder: (context, url) =>
                                 CircularProgressIndicator(),
                           ),

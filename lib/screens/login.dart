@@ -14,7 +14,6 @@ import 'package:texdoc/resources/app_theme.dart';
 import 'package:texdoc/resources/strings.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:texdoc/routers/my_router.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:texdoc/app_utils/utils.dart';
 
 import 'package:texdoc/widgets/tok2DocTextField.dart';
@@ -75,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           hintText: AppStrings.enterYourMobileNumber,
                           controller: mobileController,
                           keyboardType: TextInputType.phone,
-                          prefixIcon: Image.asset(AppAssets.callLoginIcon),
+                          prefixIcon: Image.asset(AppAssets.callLoginIcon,color: Colors.grey.shade700,),
                           obscureText: false.obs,
                          validator: MultiValidator([
                        RequiredValidator(
@@ -134,10 +133,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               ).then((value) async {
 
                                 if(value.status==true){
-                                  showSnackBar("login Status 1111222", value.message);
 
                                   // saved login user data
-                                  // noneed after change signup process
+                                  // none after change signup process
                                   SharedPreferences pref = await SharedPreferences.getInstance();
                                   pref.setString('user', jsonEncode(value.data));
                                   pref.setBool('document_verified', value.data!.user.documentVerified);
