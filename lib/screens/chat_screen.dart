@@ -96,7 +96,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     );
                   },
                 );
-              } else {
+              }
+              else {
                 return const Center(child: Text("No Patients Available"));
               }
             } else {

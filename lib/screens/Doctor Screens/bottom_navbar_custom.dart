@@ -1,4 +1,3 @@
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:texdoc/controller/get-user-profile_controller.dart';
@@ -8,22 +7,21 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:texdoc/routers/my_router.dart';
-import 'package:texdoc/screens/chat_screen.dart';
 import 'package:texdoc/screens/dr_profile_screen.dart';
 import 'package:texdoc/screens/my_profile_screen.dart';
 import '../../controller/main_home_screen_controller.dart';
 import 'all_health_tip_screen.dart';
 
 class BottomNavBarCustom extends StatefulWidget {
-  int? drawerNavigateIndex;
-   BottomNavBarCustom(this.drawerNavigateIndex,{Key? key,}) : super(key: key);
+ final int? drawerNavigateIndex;
+   const BottomNavBarCustom(this.drawerNavigateIndex,{Key? key,}) : super(key: key);
 
   @override
   State<BottomNavBarCustom> createState() => _BottomNavBarCustomState();
 }
 
 class _BottomNavBarCustomState extends State<BottomNavBarCustom> {
-  final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   UserProfileController controller = Get.put(UserProfileController());
   final controller1 = Get.put(MainHomeController());
@@ -90,7 +88,7 @@ class _BottomNavBarCustomState extends State<BottomNavBarCustom> {
     }
 
     return Scaffold(
-      key: _scaffoldkey,
+      key: _scaffoldKey,
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(78.0), // here the desired height
           child: AppBar(
