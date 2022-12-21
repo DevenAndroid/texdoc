@@ -31,24 +31,21 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(78.0), // here the desired height
-          child: Container(
-            // padding: EdgeInsets.all(8),
-            child: AppBar(
-              backgroundColor: const Color(0xff0E7ECD),
-              leading: GestureDetector(
-                  onTap: (){
-                    Get.back();
-                  },
-                  child: const Icon(Icons.arrow_back)),
-              title: const Text("Forgot Password"),
-              centerTitle: true,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(30),
-                ),
+          child: AppBar(
+            backgroundColor: const Color(0xff0E7ECD),
+            leading: GestureDetector(
+                onTap: (){
+                  Get.back();
+                },
+                child: const Icon(Icons.arrow_back)),
+            title: const Text("Forgot Password"),
+            centerTitle: true,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                bottom: Radius.circular(30),
               ),
-              // ...
             ),
+            // ...
           )
       ),
       body: SingleChildScrollView(
@@ -62,7 +59,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 SizedBox(height: 20.h,),
                 Image.asset(AppAssets.forgotPasswordBg),
                 SizedBox(height: 16.h,),
-                const Text("Please enter your register mobile number.",
+                const Text("Please enter your registered mobile number.",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16,fontWeight: FontWeight.w400,height: 1.8),),
                 SizedBox(height: 40.h,),
@@ -72,22 +69,24 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     hintText: "Enter Mobile Number",
                     obscureText: false.obs,
                 validator: MultiValidator([
-                  RequiredValidator(errorText: 'mobile number is required.')
+                  RequiredValidator(errorText: 'Mobile number is required'),
+                  MinLengthValidator(10, errorText: 'Mobile number must be at least 10 digits long')
                 ]),
                 ),
                 // const Spacer(),
                 SizedBox(height: MediaQuery.of(context).size.height*0.15,),
                 Tok2DocButton(AppStrings.send, () {
                   if(_formKey.currentState!.validate()){
-
                     showLoadingIndicatorDialog(context);
                     forgetPassword(context, mobileController.text.trim()).then((value) {
-                      print(value);
                       if(value.status==true){
-                        Get.toNamed(MyRouter.verifyYourNumberScreen,arguments: [mobileController.text.trim(), 'forgot_password']);
-                        // Navigator.pop(context);
+                        showToast("Otp has been sent successfully");
+                        Get.toNamed(MyRouter.verifyYourNumberScreen,arguments: [
+                          mobileController.text.trim(), 'forgot_password',
+                          value.data!.userEmail.toString()
+                        ]);
                       }else{
-
+                        showToast(value.message);
                       }
                     });
                   }

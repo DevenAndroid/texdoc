@@ -8,6 +8,7 @@ class Tok2DocTextField extends StatefulWidget {
   final TextEditingController? controller;
   RxBool? obscureText;
   bool? enabled;
+  final bool? readOnly;
   final String? hintText;
   final prefixIcon;
   TextInputType? keyboardType;
@@ -15,9 +16,18 @@ class Tok2DocTextField extends StatefulWidget {
   FormFieldValidator<String>? validator;
   List<TextInputFormatter>? inputFormatters;
 
-
   Tok2DocTextField(
-      {Key? key, this.controller, required this.hintText, required this.obscureText, this.prefixIcon, this.onTap, this.keyboardType, this.validator,this.enabled,this.inputFormatters})
+      {Key? key,
+      this.controller,
+      required this.hintText,
+      required this.obscureText,
+      this.prefixIcon,
+      this.onTap,
+      this.keyboardType,
+      this.validator,
+      this.enabled,
+      this.inputFormatters,
+      this.readOnly = false})
       : super(key: key);
 
   @override
@@ -33,21 +43,24 @@ class _Tok2DocTextFieldState extends State<Tok2DocTextField> {
         obscureText: widget.obscureText!.value,
         validator: widget.validator,
         onTap: widget.onTap,
+        keyboardType: widget.keyboardType,
         enabled: widget.enabled,
+        readOnly: widget.readOnly!,
         inputFormatters: widget.inputFormatters,
         decoration: InputDecoration(
+          errorMaxLines: 2,
           hintText: widget.hintText,
           fillColor: AppTheme.primaryColor.withOpacity(0.04),
           filled: true,
           prefixIcon: widget.prefixIcon,
           suffixIcon: widget.hintText == "Password"
               ? GestureDetector(
-              onTap: () {
-                widget.obscureText!.value = !widget.obscureText!.value;
-              },
-              child: widget.obscureText!.value == false
-                  ? const Icon(Icons.visibility_off_outlined)
-                  : const Icon(Icons.remove_red_eye_outlined))
+                  onTap: () {
+                    widget.obscureText!.value = !widget.obscureText!.value;
+                  },
+                  child: widget.obscureText!.value == false
+                      ? const Icon(Icons.visibility_off_outlined)
+                      : const Icon(Icons.remove_red_eye_outlined))
               : null,
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide.none,

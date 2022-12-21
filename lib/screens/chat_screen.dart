@@ -90,7 +90,9 @@ class _ChatScreenState extends State<ChatScreen> {
                           ),
                           trailing: Text(datetime),
                           subtitle: Text(item["last_message"].toString() == "Basic Information that123qwe147asd33" ?
-                          "Shared Problem" : item["last_message"].toString()),
+                          "Shared Problem" : item["last_message"].toString(),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,),
                         ),
                       ),
                     );
@@ -103,7 +105,6 @@ class _ChatScreenState extends State<ChatScreen> {
             } else {
               return const Text("No chat Available");
             }
-            return const Center(child: CircularProgressIndicator());
           })),
     );
   }

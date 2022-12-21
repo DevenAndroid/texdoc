@@ -23,7 +23,7 @@ class UserProfileController extends GetxController {
   TextEditingController genderController = TextEditingController();
   TextEditingController aboutController = TextEditingController();
   String? selectedCategory;
-  String? selectedGender;
+  RxString selectedGender = "".obs;
   File? selectedImage;
   String base64Image = "";
   List<String> names = [];
@@ -140,7 +140,7 @@ class UserProfileController extends GetxController {
             if (degreelistValue == "") {
               degreelistValue = item.id.toString();
             } else {
-              degreelistValue = degreelistValue + "," + item.id.toString();
+              degreelistValue = "$degreelistValue,${item.id}";
             }
           }
         }
@@ -150,12 +150,13 @@ class UserProfileController extends GetxController {
           nameController.text = model.value.data!.name.toString();
           mobileController.text = model.value.data!.phone.toString();
           emailController.text = model.value.data!.email.toString();
-          selectedGender = model.value.data!.gender.toString();
+          selectedGender.value = model.value.data!.gender.toString();
           dobController.text = model.value.data!.dateOfBirth.toString();
           selectedCategory = model.value.data!.categreeId.toString();
           experienceController.text = model.value.data!.experience.toString();
           aboutController.text = model.value.data!.aboutMe.toString();
           specialist= model.value.data!.specialist;
+          print("Selected Gender......    "+selectedGender.value);
            // selectedImage = model.value.data!.profileImage.toString() as File?;
           for (var i = 0; i < value.data!.documents!.length; i++) {
             names[i] = value.data!.documents![i].toString().split("/").last;

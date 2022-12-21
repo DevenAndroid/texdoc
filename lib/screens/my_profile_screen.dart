@@ -87,6 +87,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   var splist = '';
 
   showSpecialistDialogue() {
+    FocusManager.instance.primaryFocus!.unfocus();
     showDialog(
         context: context,
         builder: (context) {
@@ -200,10 +201,12 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     );
             }),
           );
-        });
+        }
+        );
   }
 
   showDegreeDialogue() {
+    FocusManager.instance.primaryFocus!.unfocus();
     showDialog(
         context: context,
         builder: (context) {
@@ -311,7 +314,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     );
             }),
           );
-        });
+        }
+        );
   }
 
   @override
@@ -494,9 +498,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             validator: MultiValidator([
                               RequiredValidator(
                                   errorText: 'Mobile number  is required'),
-                              MinLengthValidator(8,
+                              MinLengthValidator(10,
                                   errorText:
-                                      'mobile number must be at least 10 digits long'),
+                                      'Mobile number must be at least 10 digits long'),
                             ]),
                             controller: controller.mobileController,
                             enabled: false,
@@ -524,21 +528,19 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             //enabled: t,
                             hintText: "Enter Email",
                             obscureText: false.obs),
+
                         alignUserFields("Date of Birth", 'YYYY-MM-DD',
                             controller.dobController, () async {
                           DateTime? pickedDate = await showDatePicker(
                             context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(1990),
+                            initialDate: DateTime(DateTime.now().year-20),
+                            firstDate: DateTime(1930),
                             lastDate: DateTime.now(),
+                            initialDatePickerMode: DatePickerMode.year,
+                            initialEntryMode: DatePickerEntryMode.calendarOnly,
                           );
 
-                          if (pickedDate == null) {
-                            controller.dobController.text =
-                                DateFormat('yyyy-MM-dd')
-                                    .format(pickedDate!)
-                                    .toString();
-                          } else {
+                          if (pickedDate != null) {
                             controller.dobController.text =
                                 DateFormat('yyyy-MM-dd')
                                     .format(pickedDate)
@@ -567,6 +569,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             keyboardType: TextInputType.number,
                             hintText: "Experience".toString(),
                             obscureText: false.obs),
+
+
                         const Align(
                             alignment: Alignment.centerLeft,
                             heightFactor: 1.5,
@@ -577,9 +581,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                   fontWeight: FontWeight.w500,
                                   height: 2),
                             )),
-                        /* Container(
+                         Container(
                     height: 60,
-                    padding: const EdgeInsets.only(left: 12.0),
+                    padding: const EdgeInsets.only(left: 12.0,right: 12),
                     decoration: BoxDecoration(
                       color: AppTheme.primaryColor.withOpacity(0.04),
                       borderRadius: BorderRadius.circular(12.0),
@@ -588,25 +592,26 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton(
                         isExpanded: true,
+                        iconEnabledColor: Colors.black,
                         hint: const Text('Select Gender'),
-                        value: controller.selectedGender == ""
+                        value: controller.selectedGender.value.toLowerCase() == ""
                             ? null
-                            : controller.selectedGender,
-                        onChanged: (newValue) {
+                            : controller.selectedGender.value.toLowerCase(),
+                        onChanged: (String? newValue) {
                           setState(() {
-                            controller.selectedGender =
-                            newValue as String?;
+                            controller.selectedGender.value =
+                                newValue!.toLowerCase();
                           });
                         },
-                        items: controller.genderList.map((location) {
+                        items: controller.genderList.map((value) {
                           return DropdownMenuItem(
-                            value: location,
-                            child: Text(location),
+                            value: value.toLowerCase(),
+                            child: Text(value.capitalizeFirst!),
                           );
                         }).toList(),
                       ),
                     ),
-                  ),*/
+                  ),
                         const Align(
                             alignment: Alignment.centerLeft,
                             heightFactor: 1.5,
@@ -628,17 +633,17 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           decoration: BoxDecoration(
                             // color: AppTheme.primaryColor.withOpacity(0.04),
                             borderRadius: BorderRadius.circular(12.0),
-                            border: Border.all(
-                                color: Colors.grey,
-                                style: BorderStyle.solid,
-                                width: 0.80),
+                            // border: Border.all(
+                            //     color: Colors.grey,
+                            //     style: BorderStyle.solid,
+                            //     width: 0.80),
                           ),
                           child: Obx(() {
                             return !_categoryListController.isDataLoading.value
                                 ? const CircularProgressIndicator()
                                 : Container(
                                     height: 65,
-                                    padding: const EdgeInsets.only(left: 12.0),
+                                    padding: const EdgeInsets.only(left: 12.0,right: 12),
                                     decoration: BoxDecoration(
                                       color: AppTheme.primaryColor
                                           .withOpacity(0.04),
@@ -647,6 +652,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                     ),
                                     child: DropdownButtonHideUnderline(
                                       child: DropdownButton<dynamic>(
+                                        iconEnabledColor: Colors.black,
                                         isExpanded: true,
                                         hint: const Text('Select Category'),
                                         // Not necessary for Option 1
@@ -666,8 +672,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                             value: value.id.toString(),
                                             child: Text(
                                               value.name,
-                                              style: const TextStyle(
-                                                  color: Color(0xff9C9CB4)),
+                                              style: TextStyle(
+                                                  color: Colors.grey.shade900),
                                             ),
                                           );
                                         }).toList(),
@@ -702,8 +708,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           child: Container(
                             decoration: BoxDecoration(
                                 color: AppTheme.primaryColor.withOpacity(0.04),
-                                border:
-                                    Border.all(width: 1, color: Colors.grey),
+                                // border:
+                                //     Border.all(width: 1, color: Colors.grey),
                                 borderRadius: BorderRadius.circular(14)),
                             width: double.maxFinite,
                             constraints: const BoxConstraints(minHeight: 54),
@@ -719,11 +725,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                           _profileController.degreeShowListData
                                               .map((element) => Text(
                                                     "$element${_profileController.degreeShowListData.length > 1 ? "," : ""}",
-                                                    style: const TextStyle(
-                                                        color: Colors.grey,
+                                                    style: TextStyle(
+                                                        color: Colors.grey.shade900,
                                                         fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w500),
+                                                        // fontWeight: FontWeight.w500
+                                                    ),
                                                   ))
                                               .toList(),
                                     );
@@ -732,7 +738,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 const Icon(
                                   Icons.arrow_drop_down_outlined,
                                   size: 26,
-                                )
+                                ),
                               ],
                             ),
                           ),
@@ -763,8 +769,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: AppTheme.primaryColor.withOpacity(0.04),
-                                border:
-                                    Border.all(width: 1, color: Colors.grey),
+                                // border:
+                                //     Border.all(width: 1, color: Colors.grey),
                                 borderRadius: BorderRadius.circular(14)),
                             width: double.maxFinite,
                             constraints: const BoxConstraints(minHeight: 54),
@@ -779,10 +785,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                         .specialistShowListData
                                         .map((element) => Text(
                                               "$element${_profileController.specialistShowListData.length > 1 ? "," : ""}",
-                                              style: const TextStyle(
-                                                  color: Colors.grey,
+                                              style: TextStyle(
+                                                  color: Colors.grey.shade900,
                                                   fontSize: 16,
-                                                  fontWeight: FontWeight.w500),
+                                                  // fontWeight: FontWeight.w500
+                                              ),
                                             ))
                                         .toList(),
                                   ),
@@ -851,13 +858,18 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             hintText: "About me",
                             fillColor: AppTheme.primaryColor.withOpacity(0.04),
                             filled: true,
+                            enabled: true,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                              borderSide: const BorderSide(color: Colors.transparent,),
+                            ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12.0),
-                              borderSide: const BorderSide(),
+                              borderSide: const BorderSide(color: Colors.transparent,),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
-                                color: Colors.grey,
+                                color: Colors.transparent,
                               ),
                               borderRadius: BorderRadius.circular(12.0),
                             ),
@@ -988,6 +1000,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                       ],
                                     ),
                                   ),
+                                  const SizedBox(width: 16,),
                                   Expanded(
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
@@ -1157,6 +1170,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                       ],
                                     ),
                                   ),
+                                  const SizedBox(width: 16,),
                                   Expanded(
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
@@ -1294,7 +1308,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             print("""object""");
                             // showLoadingIndicatorDialog(context);
 
-                            if (controller.selectedGender == "") {
+                            if (controller.selectedGender.value == "") {
                               showToast("Please select Gender");
                             } else if (controller.selectedCategory == "") {
                               showToast("Please select Category");
@@ -1310,7 +1324,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 phone :controller.mobileController.text,
                                 dateOfBirth :controller.dobController.text,
                                 experience :controller.experienceController.text,
-                                gender :controller.selectedGender ?? controller.model.value.data!.gender,
+                                gender :controller.selectedGender.value,
                                 categreeId :controller.selectedCategory ?? categreeId,
                                 specialistId :specialistValue,
                                 profileImage : controller.base64Image != "" ? "data:image/jpg;base64,${controller.base64Image}" : "",
@@ -1434,6 +1448,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             )),
         Tok2DocTextField(
             onTap: onTap,
+            readOnly: true,
             controller: controller,
             validator: MultiValidator([
               RequiredValidator(errorText: '$fieldName is required'),

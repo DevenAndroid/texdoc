@@ -18,12 +18,16 @@ class OnBoardongScreen extends StatefulWidget {
 class _OnBoardongScreenState extends State<OnBoardongScreen> {
 
   late PageController _pageController;
-  RxInt _pageIndex = 0.obs;
+  final RxInt _pageIndex = 0.obs;
+  RxDouble page1 = (1.0).obs;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
+    _pageController.addListener(() {
+      page1.value = _pageController.page!+1;
+    });
 
   }
 
@@ -69,24 +73,53 @@ class _OnBoardongScreenState extends State<OnBoardongScreen> {
                           )),
                       const Spacer(),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           _pageController.nextPage(
                               duration: const Duration(milliseconds: 300),
                               curve: Curves.ease);
-                          if(_pageIndex.value==2){
+                          if (_pageIndex.value == 2) {
                             Get.offAllNamed(MyRouter.loginScreen);
                           }
                         },
-                        child: SizedBox(
-                          height: 72,
-                          width: 72,
-                          child: _pageIndex.value == 0
-                              ? SvgPicture.asset(AppAssets.onBoardButtonOne)
-                              : _pageIndex.value == 1
-                              ? SvgPicture.asset(AppAssets.onBoardButtontwo)
-                              :  SvgPicture.asset(AppAssets.onBoardButtonThree),
+                        child: Container(
+                          decoration: const BoxDecoration(
+                              color: Colors.transparent
+                          ),
+                          width: 64,
+                          height: 64,
+                          child: Obx(() {
+                            return Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: Transform(
+                                    transform: Matrix4.diagonal3Values(-1.0, 1.0, 1.0),
+                                    alignment: Alignment.center,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      value: page1.value / 3,
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.blue.shade600
+                                    ),
+                                    width: 55,
+                                    height: 55,
+                                    child: const Padding(
+                                      padding: EdgeInsets.only(left: 4),
+                                      child: Icon(Icons.arrow_forward_ios_rounded,color: Colors.white,size: 20,),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
                         ),
-                      ),
+                      )
                     ],
                   );
                 }),

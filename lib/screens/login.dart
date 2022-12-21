@@ -74,8 +74,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           prefixIcon: Image.asset(AppAssets.callLoginIcon,color: Colors.grey.shade700,),
                           obscureText: false.obs,
                          validator: MultiValidator([
-                       RequiredValidator(
-                       errorText: 'mobile number is required'),
+                           RequiredValidator(errorText: 'Mobile number is required'),
+                           MinLengthValidator(10, errorText: 'Mobile number must be at least 10 digits long')
 
                     ]),
                         ),
@@ -101,9 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         prefixIcon: const Icon(Icons.lock_open_outlined),
                         validator: MultiValidator([
                           RequiredValidator(
-                              errorText: 'password is required'),
-                          MinLengthValidator(8,
-                              errorText: 'password must be at least 8 digits long'),
+                              errorText: 'Password is required'),
                         ]),
                       ),
                       SizedBox(height: 32.h,),
@@ -134,6 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   // saved login user data
                                   // none after change signup process
                                   SharedPreferences pref = await SharedPreferences.getInstance();
+                                  pref.setBool("show_intro", false);
                                   pref.setString('user', jsonEncode(value.data));
                                   pref.setBool('document_verified', value.data!.user.documentVerified);
                                   pref.setString('userEmail', value.data!.user.email);

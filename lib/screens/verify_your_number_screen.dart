@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
@@ -38,25 +39,33 @@ class _VerifyYourNumberScreenState extends State<VerifyYourNumberScreen> {
   String? email="";
   String? passedScreen;
 
-  SharedPreferencesData() async{
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    email = pref.getString("userEmail")!;
-    email = pref.getString("userEmail")!;
-    setState(() {
-
-    });
-    //degreeId = pref.getString("DegreeId")!;
-
-  }
-
-
   @override
   void initState() {
     super.initState();
     mobileNumber = Get.arguments[0];
     passedScreen = Get.arguments[1];
-    SharedPreferencesData();
-    //email = sharedPreferences.get("userEmail").toString();
+    email = Get.arguments[2];
+  }
+
+
+  late Timer timer;
+  int timerSeconds = 60;
+  bool showTimer = false;
+
+  setTimer(){
+    showTimer = true;
+    setState((){});
+    timer = Timer.periodic(const Duration(seconds: 1), (value) {
+      if(timerSeconds > 1){
+        timerSeconds--;
+        setState(() {});
+      } else {
+        showTimer = false;
+        timer.cancel();
+        timerSeconds = 60;
+        setState(() {});
+      }
+    });
   }
 
   @override
@@ -102,7 +111,7 @@ class _VerifyYourNumberScreenState extends State<VerifyYourNumberScreen> {
                   height: 16.h,
                 ),
                 Text(
-                  "Please Enter The 4 Digit Code Send To Your gmail id",
+                  "Please Enter The 4 Digit Code Send To Your $email",
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                       fontSize: 16, fontWeight: FontWeight.w400, height: 1.8),
@@ -283,31 +292,25 @@ class _VerifyYourNumberScreenState extends State<VerifyYourNumberScreen> {
                   height: 50.h,
                 ),
 
-                GestureDetector(
-                  onTap: ()
-                  {
-                    if(_formKey.currentState!.validate()){
-
-                      showLoadingIndicatorDialog(context);
-                      forgetPassword(context, "$mobileNumber").then((value) {
-                        print(value);
-                        if(value.status==true){
-                          // Get.toNamed(MyRouter.verifyYourNumberScreen,arguments: [mobileController.text.trim(), 'forgot_password']);
-                          // Navigator.pop(context);
-                        }else{}
-                        return null;
-                      });
-                    }
+                !showTimer ?
+                InkWell(
+                  onTap: (){
+                    showLoadingIndicatorDialog(context);
+                    forgetPassword(context, mobileNumber).then((value) {
+                      if(value.status == true){
+                        setTimer();
+                        showToast("OTP sent successfully.");
+                      } else {
+                        showToast(value.message);
+                      }
+                    });
                   },
-                  child: const Text(
-                    'Resend Code',
-                    style: TextStyle(
-                        color: Color(0xffFF7956),
+                  child: const Text('Resend Code',
+                    style: TextStyle( color: Color(0xffFF7956),
                         decoration: TextDecoration.underline,
                         fontSize: 14,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ),
+                        fontWeight: FontWeight.w600),),
+                ) : Text("Resend OTP in 00:${timerSeconds > 9 ? timerSeconds : "0$timerSeconds"}",),
 
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.10,

@@ -691,6 +691,8 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       keyboardType: TextInputType.number,
                       hintText: "Experience".toString(),
                       obscureText: false.obs),
+
+
                   const Align(
                       alignment: Alignment.centerLeft,
                       heightFactor: 1.5,
@@ -701,9 +703,9 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                             fontWeight: FontWeight.w500,
                             height: 2),
                       )),
-                   Container(
+                  Container(
                     height: 60,
-                    padding: const EdgeInsets.only(left: 12.0),
+                    padding: const EdgeInsets.only(left: 12.0,right: 12),
                     decoration: BoxDecoration(
                       color: AppTheme.primaryColor.withOpacity(0.04),
                       borderRadius: BorderRadius.circular(12.0),
@@ -712,20 +714,21 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton(
                         isExpanded: true,
+                        iconEnabledColor: Colors.black,
                         hint: const Text('Select Gender'),
-                        value: controller.selectedGender == ""
+                        value: controller.selectedGender.value.toLowerCase() == ""
                             ? null
-                            : controller.selectedGender,
-                        onChanged: (newValue) {
+                            : controller.selectedGender.value.toLowerCase(),
+                        onChanged: (String? newValue) {
                           setState(() {
-                            controller.selectedGender =
-                            newValue as String?;
+                            controller.selectedGender.value =
+                                newValue!.toLowerCase();
                           });
                         },
-                        items: controller.genderList.map((location) {
+                        items: controller.genderList.map((value) {
                           return DropdownMenuItem(
-                            value: location,
-                            child: Text(location),
+                            value: value.toLowerCase(),
+                            child: Text(value.capitalizeFirst!),
                           );
                         }).toList(),
                       ),
@@ -747,22 +750,22 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                   Container(
                     height: 55,
                     width: deviceWidth,
-                    padding:
-                    const EdgeInsets.only(left: 12.0, right: 12.0),
+                    // padding:
+                    //     const EdgeInsets.only(left: 12.0, right: 12.0),
                     decoration: BoxDecoration(
                       // color: AppTheme.primaryColor.withOpacity(0.04),
                       borderRadius: BorderRadius.circular(12.0),
-                      border: Border.all(
-                          color: Colors.grey,
-                          style: BorderStyle.solid,
-                          width: 0.80),
+                      // border: Border.all(
+                      //     color: Colors.grey,
+                      //     style: BorderStyle.solid,
+                      //     width: 0.80),
                     ),
                     child: Obx(() {
                       return !_categoryListController.isDataLoading.value
                           ? const CircularProgressIndicator()
                           : Container(
                         height: 65,
-                        padding: const EdgeInsets.only(left: 12.0),
+                        padding: const EdgeInsets.only(left: 12.0,right: 12),
                         decoration: BoxDecoration(
                           color: AppTheme.primaryColor
                               .withOpacity(0.04),
@@ -771,6 +774,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                         ),
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton<dynamic>(
+                            iconEnabledColor: Colors.black,
                             isExpanded: true,
                             hint: const Text('Select Category'),
                             // Not necessary for Option 1
@@ -790,8 +794,8 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                                 value: value.id.toString(),
                                 child: Text(
                                   value.name,
-                                  style: const TextStyle(
-                                      color: Color(0xff9C9CB4)),
+                                  style: TextStyle(
+                                      color: Colors.grey.shade900),
                                 ),
                               );
                             }).toList(),
@@ -825,13 +829,12 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                          border: Border.all(width: 1.2, color: Colors.grey),
-                          borderRadius: BorderRadius.circular(14)
-                      ),
+                          color: AppTheme.primaryColor.withOpacity(0.04),
+                          // border:
+                          //     Border.all(width: 1, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(14)),
                       width: double.maxFinite,
-                      constraints: const BoxConstraints(
-                          minHeight: 54
-                      ),
+                      constraints: const BoxConstraints(minHeight: 54),
                       padding: const EdgeInsets.all(14),
                       child: Row(
                         children: [
@@ -840,18 +843,24 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                               return Wrap(
                                 spacing: 6,
                                 runSpacing: 4,
-                                children: _profileController
-                                    .degreeShowListData.map((element) =>
-                                    Text(element + ",",
-                                      style: const TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500
-                                      ),)).toList(),
+                                children:
+                                _profileController.degreeShowListData
+                                    .map((element) => Text(
+                                  "$element${_profileController.degreeShowListData.length > 1 ? "," : ""}",
+                                  style: TextStyle(
+                                    color: Colors.grey.shade900,
+                                    fontSize: 16,
+                                    // fontWeight: FontWeight.w500
+                                  ),
+                                ))
+                                    .toList(),
                               );
                             }),
                           ),
-                          const Icon(Icons.arrow_drop_down_outlined, size: 26,)
+                          const Icon(
+                            Icons.arrow_drop_down_outlined,
+                            size: 26,
+                          ),
                         ],
                       ),
                     ),
@@ -881,13 +890,12 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                          border: Border.all(width: 1.2, color: Colors.grey),
-                          borderRadius: BorderRadius.circular(14)
-                      ),
+                          color: AppTheme.primaryColor.withOpacity(0.04),
+                          // border:
+                          //     Border.all(width: 1, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(14)),
                       width: double.maxFinite,
-                      constraints: const BoxConstraints(
-                          minHeight: 54
-                      ),
+                      constraints: const BoxConstraints(minHeight: 54),
                       padding: const EdgeInsets.all(14),
                       child: Row(
                         children: [
@@ -896,20 +904,29 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                               spacing: 6,
                               runSpacing: 4,
                               children: _profileController
-                                  .specialistShowListData.map((element) =>
-                                  Text(element + ",", style: const TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500
-                                  ),)).toList(),
+                                  .specialistShowListData
+                                  .map((element) => Text(
+                                "$element${_profileController.specialistShowListData.length > 1 ? "," : ""}",
+                                style: TextStyle(
+                                  color: Colors.grey.shade900,
+                                  fontSize: 16,
+                                  // fontWeight: FontWeight.w500
+                                ),
+                              ))
+                                  .toList(),
                             ),
                           ),
-                          const Icon(Icons.arrow_drop_down_outlined, size: 26,)
+                          const Icon(
+                            Icons.arrow_drop_down_outlined,
+                            size: 26,
+                          )
                         ],
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20,),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   // if(showSpecialist.value)
                   // // Obx(() {
                   // //   return Wrap(
@@ -963,13 +980,18 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       hintText: "About me",
                       fillColor: AppTheme.primaryColor.withOpacity(0.04),
                       filled: true,
+                      enabled: true,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: const BorderSide(color: Colors.transparent,),
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
-                        borderSide: const BorderSide(),
+                        borderSide: const BorderSide(color: Colors.transparent,),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                          color: Colors.grey,
+                          color: Colors.transparent,
                         ),
                         borderRadius: BorderRadius.circular(12.0),
                       ),
@@ -1405,7 +1427,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       print("""object""");
                       // showLoadingIndicatorDialog(context);
 
-                      if (controller.selectedGender == "") {
+                      if (controller.selectedGender.value == "") {
                         showToast("Please select Gender");
                       } else if (controller.selectedCategory == "") {
                         showToast("Please select Category");
@@ -1420,7 +1442,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                           phone :controller.mobileController.text,
                           dateOfBirth :controller.dobController.text,
                           experience :controller.experienceController.text,
-                          gender :controller.selectedGender ?? controller.model.value.data!.gender,
+                          gender :controller.selectedGender.value,
                           categreeId :controller.selectedCategory ?? categreeId,
                           specialistId :specialistValue,
                           profileImage :controller.base64Image != "" ? "data:image/jpg;base64,${controller.base64Image}" : "",

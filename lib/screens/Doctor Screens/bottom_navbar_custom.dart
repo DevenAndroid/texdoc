@@ -27,7 +27,7 @@ class _BottomNavBarCustomState extends State<BottomNavBarCustom> {
   final controller1 = Get.put(MainHomeController());
   RxString userImage = "".obs;
   RxString userName = "".obs;
-  RxString userSpecility = "".obs;
+  RxString userSpeciality = "".obs;
 
 
   int pageIndex = 3;
@@ -81,10 +81,10 @@ class _BottomNavBarCustomState extends State<BottomNavBarCustom> {
     if(controller.isDataLoading.value){
       userImage = controller.model.value.data!.profileImage.obs;
       userName = controller.model.value.data!.name.obs;
-      userSpecility = controller.model.value.data!.email.obs;
+      userSpeciality = controller.model.value.data!.email.obs;
       print("object userImage$userImage");
       print("object userName$userName");
-      print("object userSpecility$userSpecility");
+      print("object userSpecility$userSpeciality");
     }
 
     return Scaffold(
@@ -130,7 +130,7 @@ class _BottomNavBarCustomState extends State<BottomNavBarCustom> {
                       ) : Image.asset(AppAssets.splashLogo,fit: BoxFit.cover,)),
                   ),
                   title: Text(userName.toString()),
-                  subtitle: Text(userSpecility.toString()),
+                  subtitle: Text(userSpeciality.toString()),
                 ),
                 SizedBox(
                   height: double.maxFinite,
@@ -276,7 +276,8 @@ class _BottomNavBarCustomState extends State<BottomNavBarCustom> {
 
   getLogout() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.clear();
+    await pref.clear();
+    pref.setBool("show_intro", false);
     Get.offAllNamed(MyRouter.loginScreen);
   }
 }

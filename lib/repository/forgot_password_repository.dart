@@ -11,7 +11,7 @@ import 'package:texdoc/models/api_models/model_common_response.dart';
 import 'package:texdoc/models/api_models/model_login_response.dart';
 import 'package:texdoc/app_utils/utils.dart';
 
-Future<ModelCommonResponse> forgetPassword(context, phone) async {
+Future<ModelForgotPassword> forgetPassword(context, phone) async {
   var map = <String, dynamic>{};
   map['phone'] = phone;
   final headers = {
@@ -24,30 +24,67 @@ Future<ModelCommonResponse> forgetPassword(context, phone) async {
 
   // Show loader
   // showLoadingIndicatorDialog(context);
-log("loginApiUrl Map values$map}");
+log("loginApiUrl Map values${jsonDecode(response.body)}");
   if (response.statusCode == 200) {
-    // hide loader
-    // Get.back();
-    var bodyData = jsonDecode(response.body);
-    showToast("Otp has been sent successfully");
-    // Fluttertoast.showToast(
-    //     msg:bodyData['message'],
-    //     toastLength: Toast.LENGTH_SHORT,
-    //     gravity: ToastGravity.SNACKBAR, // Also possible "TOP" and "CENTER"
-    //     backgroundColor: Colors.green,
-    //     textColor:  Colors.white);
-   // showToast("Your Otp: "+bodyData['data']['otp'].toString());
     Get.back();
-    // Navigator.pop(context);
     log("loginApiUrl Response${jsonDecode(response.body)}");
-    return ModelCommonResponse.fromJson(jsonDecode(response.body));
-
+    return ModelForgotPassword.fromJson(jsonDecode(response.body));
   } else {
     var bodyData = jsonDecode(response.body);
     showToast(bodyData['message']);
     Get.back();
-    // Navigator.pop(context);
     throw Exception("loginApiUrl Error${response.body}");
 
+  }
+}
+
+
+
+class ModelForgotPassword {
+  bool? status;
+  String? message;
+  Data? data;
+
+  ModelForgotPassword({this.status, this.message, this.data});
+
+  ModelForgotPassword.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    message = json['message'];
+    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    data['message'] = this.message;
+    if (this.data != null) {
+      data['data'] = this.data!.toJson();
+    }
+    return data;
+  }
+}
+
+class Data {
+  int? userId;
+  String? userName;
+  int? otp;
+  String? userEmail;
+
+  Data({this.userId, this.userName, this.otp, this.userEmail});
+
+  Data.fromJson(Map<String, dynamic> json) {
+    userId = json['user_id'];
+    userName = json['user_name'];
+    otp = json['otp'];
+    userEmail = json['user_email'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['user_id'] = this.userId;
+    data['user_name'] = this.userName;
+    data['otp'] = this.otp;
+    data['user_email'] = this.userEmail;
+    return data;
   }
 }

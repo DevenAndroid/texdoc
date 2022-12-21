@@ -23,10 +23,13 @@ class _SplashScreenState extends State<SplashScreen> {
       // FirebaseAuth _auth = FirebaseAuth.instance;
       if (pref.getString('user') != null && pref.getBool("document_verified") == true) {
         Get.offNamed(MyRouter.bottomNavBarCustom);
-      } else if (pref.getBool("document_verified") != true) {
-        Get.offNamed(MyRouter.loginScreen);
       } else {
-        Get.offAllNamed(MyRouter.onBoardingScreen);
+        if(pref.getBool("show_intro") != null || pref.getBool("show_intro") == false){
+          Get.offAllNamed(MyRouter.loginScreen);
+        }
+        else {
+          Get.offAllNamed(MyRouter.onBoardingScreen);
+        }
       }
     });
   }
