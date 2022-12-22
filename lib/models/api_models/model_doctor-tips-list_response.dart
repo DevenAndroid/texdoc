@@ -1,69 +1,81 @@
 class ModelDoctorTipsListResponse {
-  ModelDoctorTipsListResponse({
-    this.status,
-    this.message,
-    this.data,
-  });
   bool? status;
-  String? message;
+  String? messsage;
   List<Data>? data;
 
-  ModelDoctorTipsListResponse.fromJson(Map<String, dynamic> json){
+  ModelDoctorTipsListResponse({this.status, this.messsage, this.data});
+
+  ModelDoctorTipsListResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    message = json['message'];
-    data = List.from(json['data']).map((e)=>Data.fromJson(e)).toList();
+    messsage = json['messsage'];
+    if (json['data'] != null) {
+      data = <Data>[];
+      json['data'].forEach((v) {
+        data!.add(new Data.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['status'] = status;
-    _data['message'] = message;
-    _data['data'] = data!.map((e)=>e.toJson()).toList();
-    return _data;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = this.status;
+    data['messsage'] = this.messsage;
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
+    }
+    return data;
   }
 }
 
 class Data {
-  Data({
-    required this.id,
-    required this.userId,
-    required this.title,
-    required this.description,
-    required this.image,
-    required this.imageUrl,
-    required this.createdAt,
-    required this.updatedAt,
-  });
-  late final int id;
-  late final int userId;
-  late final String title;
-  late final String description;
-  late final String image;
-  late final String imageUrl;
-  late final String createdAt;
-  late final String updatedAt;
+  int? userId;
+  String? name;
+  int? tipsId;
+  String? title;
+  String? description;
+  String? image;
+  String? createdAt;
+  String? imageUrl;
+  String? specialist;
+  String? userImage;
 
-  Data.fromJson(Map<String, dynamic> json){
-    id = json['id'];
+  Data(
+      {this.userId,
+        this.name,
+        this.tipsId,
+        this.title,
+        this.description,
+        this.image,
+        this.createdAt,
+        this.imageUrl,
+        this.specialist,
+        this.userImage});
+
+  Data.fromJson(Map<String, dynamic> json) {
     userId = json['user_id'];
+    name = json['name'];
+    tipsId = json['tips_id'];
     title = json['title'];
     description = json['description'];
-    image = json['image']??"";
-    imageUrl = json['image_url']??"";
+    image = json['image'];
     createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
+    imageUrl = json['image_url'];
+    specialist = json['specialist'];
+    userImage = json['user_image'];
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['id'] = id;
-    _data['user_id'] = userId;
-    _data['title'] = title;
-    _data['description'] = description;
-    _data['image'] = image;
-    _data['image_url'] = imageUrl;
-    _data['created_at'] = createdAt;
-    _data['updated_at'] = updatedAt;
-    return _data;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['user_id'] = this.userId;
+    data['name'] = this.name;
+    data['tips_id'] = this.tipsId;
+    data['title'] = this.title;
+    data['description'] = this.description;
+    data['image'] = this.image;
+    data['created_at'] = this.createdAt;
+    data['image_url'] = this.imageUrl;
+    data['specialist'] = this.specialist;
+    data['user_image'] = this.userImage;
+    return data;
   }
 }

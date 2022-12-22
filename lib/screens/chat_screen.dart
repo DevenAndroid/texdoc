@@ -39,11 +39,13 @@ class _ChatScreenState extends State<ChatScreen> {
               .collection("firebase_users")
               .doc(profileController.model.value.data!.id.toString())
               .collection("chat_list")
+              .orderBy("timeStamp", descending: true)
               .snapshots(),
           builder: ((context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               if(snapshot.data!.docs.length > 0) {
                 return ListView.builder(
+                  padding: const EdgeInsets.only(top: 14),
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) {
                     final item = snapshot.data!.docs[index];
@@ -56,7 +58,6 @@ class _ChatScreenState extends State<ChatScreen> {
                         DateTime.parse(timeStamp1));
                     var datetime = "$date, $time";
                     return InkWell(
-                      autofocus: true,
                       onTap: () async {
                         Get.to(ChatDetailScreen(
                           otherName: item["sender_name"],

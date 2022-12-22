@@ -1,6 +1,6 @@
 class AppStrings {
   // Login Screen
-  static const String logIn = "Log In";
+  static const String logIn = "Doctor Login";
   static const String pleaseEnterYourAccountHere = "Please enter your account here";
   static const String enterYourMobileNumber = "Enter Your Mobile Number";
   static const String password = "Password";

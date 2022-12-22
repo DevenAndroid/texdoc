@@ -531,18 +531,29 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 
                         alignUserFields("Date of Birth", 'YYYY-MM-DD',
                             controller.dobController, () async {
+
+                              DateTime time = DateTime.now();
+                              try {
+                                time = DateFormat('dd-MM-yyyy').parseLoose(controller.dobController.text);
+                                print(time.toString());
+                              } catch (e){
+                                time = DateFormat('yyyy-MM-dd').parse(controller.dobController.text);
+                                print(time.toString());
+                              }
                           DateTime? pickedDate = await showDatePicker(
                             context: context,
-                            initialDate: DateTime(DateTime.now().year-20),
+                            initialDate: controller.dobController.text.trim() != "" &&
+                                controller.dobController.text.trim() != "null" ? time
+                                : DateTime(DateTime.now().year - 18),
                             firstDate: DateTime(1930),
                             lastDate: DateTime.now(),
-                            initialDatePickerMode: DatePickerMode.year,
+                            // initialDatePickerMode: DatePickerMode.year,
                             initialEntryMode: DatePickerEntryMode.calendarOnly,
                           );
 
                           if (pickedDate != null) {
                             controller.dobController.text =
-                                DateFormat('yyyy-MM-dd')
+                                DateFormat('dd-MM-yyyy')
                                     .format(pickedDate)
                                     .toString();
                           }

@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:texdoc/app_utils/loading_indicator.dart';
 import 'package:texdoc/repository/doctor-login_repository.dart';
-import 'package:texdoc/repository/firebase_methods.dart';
 import 'package:texdoc/resources/app_assets.dart';
 import 'package:texdoc/resources/app_theme.dart';
 import 'package:texdoc/resources/strings.dart';
@@ -74,8 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           prefixIcon: Image.asset(AppAssets.callLoginIcon,color: Colors.grey.shade700,),
                           obscureText: false.obs,
                          validator: MultiValidator([
-                           RequiredValidator(errorText: 'Mobile number is required'),
-                           MinLengthValidator(10, errorText: 'Mobile number must be at least 10 digits long')
+                           RequiredValidator(errorText: 'Mobile number is required')
 
                     ]),
                         ),
