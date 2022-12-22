@@ -387,7 +387,7 @@ class _ChatBubbleState extends State<ChatBubble> {
                                     color: Colors.black
                                 ),
                                 children: <TextSpan>[
-                                  TextSpan(text: formatter.format(DateTime.parse(widget.dob.toString())), style: const TextStyle(fontWeight: FontWeight.w500)),
+                                  TextSpan(text: widget.dob.toString(), style: const TextStyle(fontWeight: FontWeight.w500)),
                                 ],
                               ),
                             ),
