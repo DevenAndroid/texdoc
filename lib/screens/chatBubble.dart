@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../resources/app_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -15,7 +16,7 @@ class ChatBubble extends StatefulWidget {
     this.age,
     this.gender,
     this.name,
-    this.firstMessage = "", this.problemText,
+    this.firstMessage = "", this.problemText, this.country = "", this.dob = "", this.weight= "",
   }) : super(key: key);
   final String text;
   final String image;
@@ -28,12 +29,23 @@ class ChatBubble extends StatefulWidget {
   final String? name;
   final String? problemText;
   final String? gender;
+  final String? country;
+  final String? dob;
+  final String? weight;
+
+  // "age" (Done)
+  // "gender" (Done)
+  // "problem" (Done)
+  // "country" (Done)
+  // "dob" (Done)
+  // "weight" (Done)
 
   @override
   State<ChatBubble> createState() => _ChatBubbleState();
 }
 
 class _ChatBubbleState extends State<ChatBubble> {
+  DateFormat formatter = DateFormat('dd-MMM-yyyy');
 
   Future<void> _launchUrl(value) async {
     final Uri url = Uri.parse(value);
@@ -284,38 +296,16 @@ class _ChatBubbleState extends State<ChatBubble> {
                               fontSize: 18,
                               color: AppTheme.primaryColor
                           ),),
-                        const SizedBox(height: 2,),
-                        if(widget.age != "0" && widget.age != "")
-                          RichText(
-                            text: TextSpan(
-                              text: 'Age : ',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  height: 1.25,
-                                  fontSize: 15,
-                                  color: Colors.black
-                              ),
-                              children: <TextSpan>[
-                                TextSpan(text: widget.age, style: const TextStyle(fontWeight: FontWeight.w500)),
-                              ],
-                            ),
-                          ),
-                        const SizedBox(height: 2,),
-                        RichText(
-                          text: TextSpan(
-                            text: 'Gender : ',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                height: 1.25,
-                                fontSize: 15,
-                                color: Colors.black
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(text: widget.gender, style: const TextStyle(fontWeight: FontWeight.w500)),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 2,),
+
+                        ///Name : FULL NAME
+                        // Age :
+                        // Gender :
+                        // Country :
+                        // Date of Birth :
+                        // Weight :
+                        // Prescription / Problem description
+
+                        /// Name
                         RichText(
                           text: TextSpan(
                             text: 'Name : ',
@@ -330,10 +320,101 @@ class _ChatBubbleState extends State<ChatBubble> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 2,),
+                        /// Age
+                        if(widget.age != "0" && widget.age != "")
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 2),
+                            child: RichText(
+                              text: TextSpan(
+                                text: 'Age : ',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    height: 1.25,
+                                    fontSize: 15,
+                                    color: Colors.black
+                                ),
+                                children: <TextSpan>[
+                                  TextSpan(text: widget.age, style: const TextStyle(fontWeight: FontWeight.w500)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        /// Gender
                         RichText(
                           text: TextSpan(
-                            text: 'Problem Description : ',
+                            text: 'Gender : ',
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                height: 1.25,
+                                fontSize: 15,
+                                color: Colors.black
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(text: widget.gender, style: const TextStyle(fontWeight: FontWeight.w500)),
+                            ],
+                          ),
+                        ),
+                        /// Country
+                        if(widget.country != "0" && widget.country != "")
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 2),
+                            child: RichText(
+                              text: TextSpan(
+                                text: 'Country : ',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    height: 1.25,
+                                    fontSize: 15,
+                                    color: Colors.black
+                                ),
+                                children: <TextSpan>[
+                                  TextSpan(text: widget.country, style: const TextStyle(fontWeight: FontWeight.w500)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        /// DOB
+                        if(widget.dob != "0" && widget.dob != "")
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 2),
+                            child: RichText(
+                              text: TextSpan(
+                                text: 'Date of Birth : ',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    height: 1.25,
+                                    fontSize: 15,
+                                    color: Colors.black
+                                ),
+                                children: <TextSpan>[
+                                  TextSpan(text: formatter.format(DateTime.parse(widget.dob.toString())), style: const TextStyle(fontWeight: FontWeight.w500)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        /// Weight
+                        if(widget.weight != "0" && widget.weight != "")
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 2),
+                            child: RichText(
+                              text: TextSpan(
+                                text: 'Weight : ',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    height: 1.25,
+                                    fontSize: 15,
+                                    color: Colors.black
+                                ),
+                                children: <TextSpan>[
+                                  TextSpan(text: widget.weight, style: const TextStyle(fontWeight: FontWeight.w500)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        /// Problem
+                        RichText(
+                          text: TextSpan(
+                            text: 'Prescription / Problem description : ',
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 height: 1.25,

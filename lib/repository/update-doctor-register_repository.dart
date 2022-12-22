@@ -62,16 +62,16 @@ Future<ModelCommonResponse> updateDoctorRegister(
   request.fields['institution_name'] = institution_name;
 
   if (document1.path != "") {
-    request.files.add(await multipartFile("document[]", document1));
+    request.files.add(await multipartFile("document_1", document1));
   }
   if (document2.path != "") {
-    request.files.add(await multipartFile("document[]", document2));
+    request.files.add(await multipartFile("document_2", document2));
   }
   if (document3.path != "") {
-    request.files.add(await multipartFile("document[]", document3));
+    request.files.add(await multipartFile("document_3", document3));
   }
   if (document4.path != "") {
-    request.files.add(await multipartFile("document[]", document4));
+    request.files.add(await multipartFile("document_4", document4));
   }
   var response = await request.send();
   request.headers.addAll(headers);

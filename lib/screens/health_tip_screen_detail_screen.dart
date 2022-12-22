@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:texdoc/models/api_models/model_doctor-tips-list_response.dart';
-import 'package:texdoc/models/message_model.dart';
 import 'package:texdoc/resources/app_theme.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HealthTipScreen extends StatefulWidget {
-  Data data;
-  HealthTipScreen(this.data);
+ final Data data;
+  const HealthTipScreen(this.data, {super.key});
 
   @override
   State<HealthTipScreen> createState() => _HealthTipScreenState();
@@ -17,14 +16,13 @@ class _HealthTipScreenState extends State<HealthTipScreen> {
   Widget build(BuildContext context) {
 
     var deviceWidth = MediaQuery.of(context).size.width;
-    var deviceHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(78.0), // here the desired height
           child: AppBar(
             backgroundColor: const Color(0xff0E7ECD),
-            title: Text("Health Tip"),
+            title: const Text("Health Tip"),
             centerTitle: true,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(
@@ -52,7 +50,7 @@ class _HealthTipScreenState extends State<HealthTipScreen> {
               ),
             ),
             SizedBox(height: 18.h,),
-            Text(widget.data.description.toString(),style: TextStyle(height:1.5,fontWeight: FontWeight.w500, fontSize: 14,  color: AppTheme.greyColor),
+            Text(widget.data.description.toString(),style: const TextStyle(height:1.5,fontWeight: FontWeight.w500, fontSize: 14,  color: AppTheme.greyColor),
             )
 
           ],

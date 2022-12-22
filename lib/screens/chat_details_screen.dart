@@ -336,8 +336,10 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                             firstMessage: item["message"].toString() == "Basic Information that123qwe147asd33" ? item["message"].toString() : "",
                             age: item["message"].toString() == "Basic Information that123qwe147asd33" ? item["initialMessage"]["age"] : "",
                             gender: item["message"].toString() == "Basic Information that123qwe147asd33" ? item["initialMessage"]["gender"] : "",
-                            problemText: item["message"].toString() == "Basic Information that123qwe147asd33" ?
-                            item["initialMessage"].toString().contains("problem") ? item["initialMessage"]["problem"] : ""  : "",
+                            problemText: item["message"].toString() == "Basic Information that123qwe147asd33" ? item["initialMessage"].toString().contains("problem") ? item["initialMessage"]["problem"] : ""  : "",
+                            country: item["message"].toString() == "Basic Information that123qwe147asd33" ? item["initialMessage"].toString().contains("country") ? item["initialMessage"]["country"] : ""  : "",
+                            dob: item["message"].toString() == "Basic Information that123qwe147asd33" ? item["initialMessage"].toString().contains("dob") ? item["initialMessage"]["dob"] : ""  : "",
+                            weight: item["message"].toString() == "Basic Information that123qwe147asd33" ? item["initialMessage"].toString().contains("weight") ? item["initialMessage"]["weight"] : ""  : "",
                             name: newName,
                             text: item["message"],
                             sendImage: item["message"].toString() == "Shared Image from user123123132131" ? item["image"] : "",

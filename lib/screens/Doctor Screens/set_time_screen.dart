@@ -110,7 +110,7 @@ class _SetTimeScreenState extends State<SetTimeScreen> {
     if (response.statusCode == 200) {
       var bodyData = jsonDecode(response.body);
       print(response.body);
-      showToast(bodyData['message']);
+      showToast(bodyData['message'].toString().capitalizeFirst);
       log("loginApiUrl Response${jsonDecode(response.body)}");
       getData();
       Navigator.push(

@@ -653,8 +653,9 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                         DateTime? pickedDate = await showDatePicker(
                           context: context,
                           initialDate: DateTime.now(),
-                          firstDate: DateTime(1990),
+                          firstDate: DateTime(1930),
                           lastDate: DateTime.now(),
+                          initialEntryMode: DatePickerEntryMode.calendarOnly,
                         );
 
                         if (pickedDate == null) {
@@ -1565,6 +1566,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
             )),
         Tok2DocTextField(
             onTap: onTap,
+            readOnly: true,
             controller: controller,
             validator: MultiValidator([
               RequiredValidator(errorText: '$fieldName is required'),
