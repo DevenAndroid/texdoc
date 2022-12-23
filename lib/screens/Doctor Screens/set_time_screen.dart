@@ -240,7 +240,7 @@ class _SetTimeScreenState extends State<SetTimeScreen> {
                                   contentPadding: const EdgeInsets.all(0),
                                   controlAffinity:
                                       ListTileControlAffinity.leading,
-                                  title: Text(model.value.data![index].day ?? ""),
+                                  title: Text((model.value.data![index].day ?? "").capitalizeFirst!),
                                   value: model.value.data![index].isAvailable,
                                   onChanged: (value)
                                   {

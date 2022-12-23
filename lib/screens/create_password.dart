@@ -63,24 +63,39 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 SizedBox(height: 20.h,),
                 Image.asset(AppAssets.createNewPasswordBg),
                 SizedBox(height: 16.h,),
-                const Text("Your New Password Must Be Diffrent From Previously Used Password",
+                const Text("Now you can change your password.",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16,fontWeight: FontWeight.w400,height: 1.8),),
                 SizedBox(height: 40.h,),
                 Tok2DocTextField(
                     hintText: "New Password",
+                    prefixIcon: Image.asset(AppAssets.lockIcon),
                     controller: newPassController,
                     validator: MultiValidator([
-                      RequiredValidator(errorText: 'new password is required.')
+                      RequiredValidator(errorText: 'Password is required'),
+                      MinLengthValidator(8,
+                          errorText: 'Password must be 8 minimum character with\nat least 1 special character.'),
+                      PatternValidator(r'(?=.*?[#?!@$%^&*-])',
+                          errorText:
+                          'Password must be 8 minimum character with at\nleast 1 special character.')
                     ]),
                     obscureText: false.obs),
                 SizedBox(height: 24.h,),
                 Tok2DocTextField(
                     hintText: "Confirm New Password",
                     controller: confirmPassController,
-                    validator: MultiValidator([
-                      RequiredValidator(errorText: 'confirm password is required.')
-                    ]), obscureText: false.obs),
+                    prefixIcon: Image.asset(AppAssets.lockIcon),
+                    validator: (value){
+                      if(value!.trim().isEmpty){
+                        return 'Confirm password is required.';
+                      } else
+                      if(newPassController.text.trim() != value.trim()) {
+                        return "Confirm password is not matching with password.";
+                      }
+                      else {
+                        return null;
+                      }
+                    }, obscureText: false.obs),
                 // const Spacer(),
                 SizedBox(height: MediaQuery.of(context).size.height*0.1,),
                 Tok2DocButton(AppStrings.save, () {

@@ -54,6 +54,8 @@ class _Tok2DocTextFieldState extends State<Tok2DocTextField> {
           filled: true,
           prefixIcon: widget.prefixIcon,
           suffixIcon: widget.hintText == "Password"
+              || widget.hintText == "New Password"
+              || widget.hintText == "Confirm New Password"
               ? GestureDetector(
                   onTap: () {
                     widget.obscureText!.value = !widget.obscureText!.value;

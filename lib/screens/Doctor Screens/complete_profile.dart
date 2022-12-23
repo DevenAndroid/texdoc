@@ -648,22 +648,23 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       //enabled: t,
                       hintText: "Enter Email",
                       obscureText: false.obs),
-                  alignUserFields("Date of Birth", 'YYYY-MM-DD',
+                  alignUserFields("Date of Birth", 'DD-MM-YYYY',
                       controller.dobController, () async {
 
-                        DateTime time = DateTime.now();
-                        try {
-                          time = DateFormat('dd-MM-yyyy').parseLoose(controller.dobController.text);
-                          print(time.toString());
-                        } catch (e){
-                          time = DateFormat('yyyy-MM-dd').parse(controller.dobController.text);
-                          print(time.toString());
+                        DateTime time = DateTime(DateTime.now().year - 18);
+                        if(controller.dobController.text != ""){
+                          try {
+                            time = DateFormat('dd-MM-yyyy').parseLoose(controller.dobController.text);
+                            print(time.toString());
+                          }
+                          catch (e){
+                            time = DateFormat('yyyy-MM-dd').parse(controller.dobController.text);
+                            print(time.toString());
+                          }
                         }
                         DateTime? pickedDate = await showDatePicker(
                           context: context,
-                          initialDate: controller.dobController.text.trim() != "" &&
-                              controller.dobController.text.trim() != "null" ? time
-                              : DateTime(DateTime.now().year - 18),
+                          initialDate: time,
                           firstDate: DateTime(1930),
                           lastDate: DateTime.now(),
                           // initialDatePickerMode: DatePickerMode.year,

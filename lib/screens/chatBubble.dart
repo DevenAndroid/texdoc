@@ -167,11 +167,10 @@ class _ChatBubbleState extends State<ChatBubble> {
                       height: 35,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(1000),
-                        child: CachedNetworkImage(
+                        child: Image.network(
+                          widget.image1,
                           fit: BoxFit.cover,
-                          imageUrl: widget.image1,
-                          errorWidget: (_,__,___)=> const SizedBox(),
-                          placeholder: (_,__)=> const SizedBox(),
+                          errorBuilder: (_,__,___)=> const SizedBox(),
                         ),
                       ),
                     ),
@@ -205,11 +204,10 @@ class _ChatBubbleState extends State<ChatBubble> {
                       height: 35,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(1000),
-                        child: CachedNetworkImage(
+                        child: Image.network(
+                            widget.image,
                           fit: BoxFit.cover,
-                          imageUrl: widget.image,
-                          errorWidget: (_,__,___)=> const SizedBox(),
-                          placeholder: (_,__)=> const SizedBox(),
+                          errorBuilder: (_,__,___)=> const SizedBox(),
                         ),
                       ),
                     ),

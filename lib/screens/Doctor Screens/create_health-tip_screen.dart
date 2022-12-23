@@ -57,7 +57,8 @@ class _CreateHealthTipScreenState extends State<CreateHealthTipScreen> {
               Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.only(left: 8.0),
-                  child: const Text('Tips Tittle',style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),)),
+                  child: const Text('Tips Tittle',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),)),
               SizedBox(height: 8.h,),
               TextFormField(
                 controller: titleController,
@@ -113,7 +114,8 @@ class _CreateHealthTipScreenState extends State<CreateHealthTipScreen> {
                 ),
                     Padding(
                         padding: const EdgeInsets.only(left: 16.0),
-                        child: Text(selectedImage==null?"0 files uploaded":"1 files uploaded",textAlign: TextAlign.center,))
+                        child: Text(selectedImage==null?"0 Files selected":"1 Files selected",
+                          textAlign: TextAlign.center,))
                   ],
                 ),
               ),
@@ -127,7 +129,8 @@ class _CreateHealthTipScreenState extends State<CreateHealthTipScreen> {
               TextFormField(
                 controller: descriptionController,
                 obscureText: false,
-                maxLines: 5,
+                minLines: 5,
+                maxLines: 10,
                 decoration: InputDecoration(
                   hintText: 'Enter text here',
                   fillColor: AppTheme.primaryColor.withOpacity(0.04),

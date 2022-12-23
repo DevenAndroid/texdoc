@@ -124,7 +124,9 @@ class _BottomNavBarCustomState extends State<BottomNavBarCustom> {
                     // backgroundImage: AssetImage(AppAssets.doctorF),
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(100000),
-                      child: userImage!= "" ? Image.network(userImage.toString(), fit: BoxFit.cover,
+                      child: userImage!= "" ? Image.network(
+                        userImage.toString(), fit: BoxFit.cover,
+                        errorBuilder: (_,__,___)=> const Icon(Icons.person,color: Colors.white,),
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height,
                       ) : Image.asset(AppAssets.splashLogo,fit: BoxFit.cover,)),

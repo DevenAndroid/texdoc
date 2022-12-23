@@ -33,6 +33,8 @@ Future<ModelCommonResponse> updateDoctorRegister(
   required File document3,
   required File document4,
 }) async {
+
+  showLoadingIndicatorDialog(context);
   ModelLoginData? user = await getToken();
   var token = user.token;
 
@@ -43,8 +45,9 @@ Future<ModelCommonResponse> updateDoctorRegister(
   };
 
   var postUri = Uri.parse(ApiUrls.updateDoctorRegisterApiUrl);
-  var request = new http.MultipartRequest("POST", postUri);
+  var request = http.MultipartRequest("POST", postUri);
   request.headers.addAll(headers);
+
   request.fields['name'] = name;
   request.fields['email'] = email;
   request.fields['phone'] = phone;
@@ -53,6 +56,7 @@ Future<ModelCommonResponse> updateDoctorRegister(
   request.fields['gender'] = gender;
   request.fields['categree_id'] = categreeId;
   request.fields['specialist_id'] = specialistId;
+
   if(profileImage != "") {
     request.fields['profile_image'] = profileImage;
   }
@@ -73,76 +77,20 @@ Future<ModelCommonResponse> updateDoctorRegister(
   if (document4.path != "") {
     request.files.add(await multipartFile("document_4", document4));
   }
-  var response = await request.send();
-  request.headers.addAll(headers);
-  showLoadingIndicatorDialog(context);
-  print("AAAAAAAAAAA${request.fields}");
-  if (response.statusCode == 200) {
-    print("AAAAAAAAAAA${request.fields}");
-    print("AAAAAAAAAAA${request.files}");
 
+  log(request.fields.toString());
+  for(var item in request.files){
+    log(item.filename.toString());
+  }
+
+  var response = await request.send();
+  Get.back();
+  if (response.statusCode == 200) {
     return ModelCommonResponse.fromJson(jsonDecode(await response.stream.bytesToString()));
   } else {
-    /*print(await response.stream.bytesToString());
-    return ModelCommonResponse(status: false, message: '');*/
-    //Get.back();
-    var bodyData = jsonDecode(response.toString());
-    showToast("Someting Wrong");
-    throw Exception("updateDoctorRegisterApiUrl Error${response.toString()}");
+    showToast("Something Went Wrong...");
+    throw Exception(response);
   }
-  /* request.send().then((response) {
-    if (response.statusCode == 200)
-      print("Uploaded!");
-    print("Uploaded!");
-
-  });
-
-
-  print("updateDoctorRegisterApiUrl map values::$map");
-
-
-  final response = await http.post(Uri.parse(ApiUrls.updateDoctorRegisterApiUrl),
-      body: jsonEncode(map), headers: headers);
-  if (response.statusCode == 200) {
-    // hide loader
-    Get.back();
-    var bodyData = jsonDecode(response.body);
-    showToast(bodyData['message'].toString());
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Welcome'),           // To display the title it is optional
-            content: Text('Thanks for completing your profile, we will get back to you shortly with your profile approval update '),   // Message which will be pop up on the screen
-            // Action widget which will provide the user to acknowledge the choice
-            actions: [
-              TextButton(                     // FlatButton widget is used to make a text to work like a button
-
-                onPressed: () {
-                  Navigator.pop(context);
-                },             // function used to perform after pressing the button
-                child: Text('CANCEL'),
-              ),
-              TextButton(
-
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('ACCEPT'),
-              ),
-            ],
-          );
-        });
-    log("updateDoctorRegisterApiUrl Response${jsonDecode(response.body)}");
-    return ModelCommonResponse.fromJson(jsonDecode(response.body));
-
-  } else {
-    Get.back();
-    var bodyData = jsonDecode(response.body);
-    showToast(bodyData['message'].toString());
-    throw Exception("updateDoctorRegisterApiUrl Error${response.body}");
-
-  }*/
 }
 
 Future<http.MultipartFile> multipartFile(String? fieldName, File file1) async {

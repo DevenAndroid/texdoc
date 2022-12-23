@@ -321,8 +321,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   @override
   void initState() {
     super.initState();
-    controller.getData();
-    setState(() {});
   }
 
   @override
@@ -360,8 +358,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     child: Column(
                       // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CupertinoButton(
-                          onPressed: () {
+                        InkWell(
+                          onTap: () {
                             showModalBottomSheet(
                               context: context,
                               elevation: 10,
@@ -402,10 +400,15 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           },
                           // elevation: 2,
                           // shape: const CircleBorder(),
-                          child: CircleAvatar(
-                            // backgroundColor: AppTheme.primaryColor,
-                            radius: 50,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey.shade200
+                            ),
+                            width: 100,
+                            height: 100,
                             child: ClipRRect(
+
                                 borderRadius: BorderRadius.circular(1000),
                                 child: controller.selectedImage == null
                                     ? controller.model.value.data!.profileImage
@@ -415,27 +418,10 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                             size: 24,
                                             color: Colors.white,
                                           )
-                                        : CachedNetworkImage(
-                                            imageUrl: controller
-                                                .model.value.data!.profileImage,
-                                            imageBuilder:
-                                                (context, imageProvider) =>
-                                                    Container(
-                                              decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                  image: imageProvider,
-                                                  fit: BoxFit.cover,
-                                                  // colorFilter: ColorFilter.mode(Colors.red, BlendMode.colorBurn)
-                                                ),
-                                              ),
-                                            ),
-                                            placeholder: (context, url) =>
-                                                const Center(
-                                                    child:
-                                                        CircularProgressIndicator()),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    const SizedBox(),
+                                        : Image.network(
+                                            controller.model.value.data!.profileImage,
+                                  errorBuilder: (_,__,___)=> const Icon(Icons.person,color: Colors.blue,),
+                                  fit: BoxFit.cover,
                                           )
                                     : Image.file(
                                         controller.selectedImage!,
@@ -529,22 +515,23 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             hintText: "Enter Email",
                             obscureText: false.obs),
 
-                        alignUserFields("Date of Birth", 'YYYY-MM-DD',
+                        alignUserFields("Date of Birth", 'DD-MM-YYYY',
                             controller.dobController, () async {
 
-                              DateTime time = DateTime.now();
-                              try {
-                                time = DateFormat('dd-MM-yyyy').parseLoose(controller.dobController.text);
-                                print(time.toString());
-                              } catch (e){
-                                time = DateFormat('yyyy-MM-dd').parse(controller.dobController.text);
-                                print(time.toString());
+                              DateTime time = DateTime(DateTime.now().year - 18);
+                              if(controller.dobController.text != ""){
+                                try {
+                                  time = DateFormat('dd-MM-yyyy').parseLoose(controller.dobController.text);
+                                  print(time.toString());
+                                }
+                                catch (e){
+                                  time = DateFormat('yyyy-MM-dd').parse(controller.dobController.text);
+                                  print(time.toString());
+                                }
                               }
                           DateTime? pickedDate = await showDatePicker(
                             context: context,
-                            initialDate: controller.dobController.text.trim() != "" &&
-                                controller.dobController.text.trim() != "null" ? time
-                                : DateTime(DateTime.now().year - 18),
+                            initialDate: time,
                             firstDate: DateTime(1930),
                             lastDate: DateTime.now(),
                             // initialDatePickerMode: DatePickerMode.year,
@@ -651,7 +638,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           ),
                           child: Obx(() {
                             return !_categoryListController.isDataLoading.value
-                                ? const CircularProgressIndicator()
+                                ? const SizedBox()
                                 : Container(
                                     height: 65,
                                     padding: const EdgeInsets.only(left: 12.0,right: 12),
@@ -1271,39 +1258,24 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         ),
                         Tok2DocButton(AppStrings.updateProfile, () {
                           if (_formKey.currentState!.validate()) {
-                            var splist = '';
                             var meDegrees = '';
-                            // for (var specilist in specialistList) {
-                            //   if (splist == '') {
-                            //     splist = specilist;
-                            //   } else {
-                            //     splist = splist + ',' + specilist;
-                            //     print("splist::" + splist);
-                            //   }
-                            // }
                             specialistValue = "";
-                            for (var item in _profileController
-                                .specialistModel.value.data!) {
+                            for (var item in _profileController.specialistModel.value.data!) {
                               if (item.selected!.value) {
                                 if (specialistValue == "") {
                                   specialistValue = item.id.toString();
                                 } else {
-                                  specialistValue = specialistValue +
-                                      "," +
-                                      item.id.toString();
+                                  specialistValue = "$specialistValue,${item.id}";
                                 }
                               }
                             }
                             degreeslistValue = "";
-                            for (var item in _profileController
-                                .degreelistModel.value.data!.medicalDegree!) {
+                            for (var item in _profileController.degreelistModel.value.data!.medicalDegree!) {
                               if (item.selected!.value) {
                                 if (degreeslistValue == "") {
                                   degreeslistValue = item.id.toString();
                                 } else {
-                                  degreeslistValue = degreeslistValue +
-                                      "," +
-                                      item.id.toString();
+                                  degreeslistValue = "$degreeslistValue,${item.id}";
                                 }
                               }
                             }
@@ -1312,21 +1284,15 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               if (meDegrees == '') {
                                 meDegrees = degrees.toString();
                               } else {
-                                meDegrees = '$meDegrees,${degrees}';
+                                meDegrees = '$meDegrees,$degrees';
                               }
                             }
-
-                            print("""object""");
-                            // showLoadingIndicatorDialog(context);
 
                             if (controller.selectedGender.value == "") {
                               showToast("Please select Gender");
                             } else if (controller.selectedCategory == "") {
                               showToast("Please select Category");
                             }
-                            /*else if (degreeId == null) {
-                        showToast("Please select degree");
-                      } */
                             else {
                               updateDoctorRegister(
                                 context :context,
@@ -1352,41 +1318,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 if (value.status) {
                                   controller.getData();
                                   showToast(value.message);
-                                  // getProfileData();
-                                  // showDialog(
-                                  //     context: context,
-                                  //     builder: (BuildContext context) {
-                                  //       return AlertDialog(
-                                  //         title: const Text('Welcome'),
-                                  //         // To display the title it is optional
-                                  //         content: const Text(
-                                  //             'Thanks for completing your profile, we will get back to you shortly with your profile approval update '),
-                                  //         // Message which will be pop up on the screen
-                                  //         // Action widget which will provide the user to acknowledge the choice
-                                  //         actions: [
-                                  //           TextButton(
-                                  //             onPressed: () {
-                                  //               Get.offAllNamed(
-                                  //                   MyRouter.loginScreen);
-                                  //               // Navigator.pop(context);
-                                  //             },
-                                  //             child: const Text('ACCEPT'),
-                                  //           ),
-                                  //         ],
-                                  //       );
-                                  //     });
                                 }
                               });
                             }
-
-                            /*if (degreeId != null) {
-
-
-                            } else {
-                              showToast("Please select degree");
-                            }*/
-                          } else {
-                            // showToast("profile not Updated");
                           }
                         }),
                         SizedBox(

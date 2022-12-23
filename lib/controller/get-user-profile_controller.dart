@@ -130,7 +130,7 @@ class UserProfileController extends GetxController {
             if (specialistValue == "") {
               specialistValue = item.id.toString();
             } else {
-              specialistValue = specialistValue + "," + item.id.toString();
+              specialistValue = "$specialistValue,${item.id}";
             }
           }
         }
@@ -156,8 +156,7 @@ class UserProfileController extends GetxController {
           experienceController.text = model.value.data!.experience.toString();
           aboutController.text = model.value.data!.aboutMe.toString();
           specialist= model.value.data!.specialist;
-          print("Selected Gender......    "+selectedGender.value);
-           // selectedImage = model.value.data!.profileImage.toString() as File?;
+          print("Selected Gender......    ${selectedGender.value}");
           for (var i = 0; i < value.data!.documents!.length; i++) {
             names[i] = value.data!.documents![i].toString().split("/").last;
           }

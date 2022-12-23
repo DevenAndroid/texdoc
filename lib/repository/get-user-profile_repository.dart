@@ -10,11 +10,8 @@ import 'package:texdoc/models/api_models/model_user_profile_response.dart';
 import 'package:texdoc/app_utils/utils.dart';
 
 Future<ModelUserProfileResponse> getUserProfileData() async {
-  var map = <String, dynamic>{};
   ModelLoginData? user = await getToken();
-
   var token = user.token;
-  print("token::::::=>" + token.toString());
 
   final headers = {
     HttpHeaders.contentTypeHeader: 'application/json',
@@ -25,29 +22,10 @@ Future<ModelUserProfileResponse> getUserProfileData() async {
   final response =
       await http.get(Uri.parse(ApiUrls.getUserProfileApiUrl), headers: headers);
 
-  // Show loader
-  // showLoadingIndicatorDialog(context);
-  /* log("getUserProfileApiUrl Map values$map}");
+  log("Doctor Profile APi Response......  ${response.body}");
   if (response.statusCode == 200) {
-    // hide loader
-    // Get.back();
-    log("getUserProfileApiUrl Response${jsonDecode(response.body)}");
-    return ModelUserProfileResponse.fromJson(jsonDecode(response.body));
-
-  } else {
-    // Get.back();
-    throw Exception("getUserProfileApiUrl Error${response.body}");
-
-  }
-}*/
-  log("getUserProfileApiUrl Map values$map}");
-  if (response.statusCode == 200) {
-    // hide loader
-    // Get.back();
-    log("getUserProfileApiUrl Response${jsonDecode(response.body)}");
     return ModelUserProfileResponse.fromJson(jsonDecode(response.body));
   } else {
-    // Get.back();
-    throw Exception("getUserProfileApiUrl Error${response.body}");
+    throw Exception(response.body);
   }
 }

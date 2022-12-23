@@ -228,7 +228,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
         .set({
       "sender_id": widget.otherId.toString(),
       "sender_name": widget.otherName.toString(),
-      "send_profile": widget.sendProfile,
+      "send_profile": newProfile,
       "last_message": message,
       //"timeStamp": timeStamp,
     });
@@ -265,15 +265,20 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   @override
   void initState() {
     super.initState();
+    newName = widget.otherName;
+    newProfile = widget.sendProfile;
     createChatNode();
     FirebaseFirestore.instance
         .collection("user_collection")
         .doc(widget.otherId.toString())
         .get()
         .then((value) {
-      token = value.data()!["token"] ?? "";
-      newName = value.data()!["user_name"] ?? "";
-      newProfile = value.data()!["user_image"] ?? "";
+      if (value.exists == true) {
+        token = value.data()!["token"] ?? "";
+        newName = value.data()!["user_name"] ?? "";
+        newProfile = value.data()!["user_image"] ?? "";
+        print("new Profile.....$newProfile");
+      }
       print(token);
       print(newName);
       print(newProfile);
@@ -342,7 +347,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                             weight: item["message"].toString() == "Basic Information that123qwe147asd33" ? item["initialMessage"].toString().contains("weight") ? item["initialMessage"]["weight"] : ""  : "",
                             name: newName,
                             text: item["message"],
-                            sendImage: item["message"].toString() == "Shared Image from user123123132131" ? item["image"] : "",
+                            sendImage: newProfile,
                             image: widget.sendProfile,
                             image1: profileController.model.value.data!.profileImage,
                             date_time: timeDate,
@@ -420,6 +425,8 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                   child: TextFormField(
                     controller: _messageController,
                     obscureText: false,
+                    minLines: 1,
+                    maxLines: 8,
                     decoration: const InputDecoration(
                       hintText: 'Write a message...',
                       focusedBorder: OutlineInputBorder(

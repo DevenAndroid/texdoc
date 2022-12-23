@@ -143,25 +143,12 @@ class _DrProfileScreenState extends State<DrProfileScreen> {
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
-                              child: /*Image.asset(AppAssets.surgery, fit: BoxFit.fill,)*/
-                                  CachedNetworkImage(
-                                imageUrl: controller
+                              child: Image.network(
+                                controller
                                     .model.value.data!.profileImage
                                     .toString(),
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.cover,
-                                      // colorFilter: const ColorFilter.mode(Colors.red, BlendMode.colorBurn)
-                                    ),
-                                  ),
-                                ),
-                                placeholder: (context, url) => const Center(
-                                    child: CircularProgressIndicator()),
-                                errorWidget: (context, url, error) =>
-                                    const SizedBox(),
+                                fit: BoxFit.cover,
+                                errorBuilder: (_,__,___)=> const Icon(Icons.person,color: Colors.white,),
                               ),
                             ),
                           ),

@@ -137,7 +137,7 @@ class _AllHealthTipScreenState extends State<AllHealthTipScreen> {
           ),
         ),
         title: Text(data.title.toString(),
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),),
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),maxLines: 3,),
         subtitle: Text(data.createdAt.toString(),
           style: const TextStyle(height: 2.0),),
         // trailing:  Text(messageData.messageTime.toString(),style: const TextStyle(fontSize: 14,fontWeight: FontWeight.w400),),
